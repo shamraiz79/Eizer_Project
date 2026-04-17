@@ -1,0 +1,80 @@
+<section class="home_banner_area mb-40" id="section-{{ section.id }}">
+  <div class="banner_inner d-flex align-items-center" 
+       {% if section.settings.bg_image != blank %}
+         style="background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}'); background-size: cover; background-position: center center;"
+       {% endif %}>
+    <div class="container">
+      <div class="banner_content row">
+        <div class="col-lg-12">
+          
+          {% if section.settings.sub_heading != blank %}
+            <p class="sub text-uppercase">{{ section.settings.sub_heading }}</p>
+          {% endif %}
+          
+          {% if section.settings.main_heading != blank %}
+            <h3>{{ section.settings.main_heading }}</h3>
+          {% endif %}
+          
+          {% if section.settings.description != blank %}
+            <h4>{{ section.settings.description }}</h4>
+          {% endif %}
+          
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <a class="main_btn mt-40" href="{{ section.settings.button_link }}">
+              {{ section.settings.button_label }}
+            </a>
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+      "info": "Upload the main banner image here."
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "men Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "<span>Show</span> Your <br />Personal <span>Style</span>",
+      "info": "Use <span>...</span> to highlight text and <br> for line breaks."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Fowl saw dry which a above together place."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "View Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

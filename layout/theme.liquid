@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  <title>{{ page_title }} - {{ shop.name }}</title>
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <link rel="icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+
+  {{ content_for_header }}
+
+  {{ 'style.css' | asset_url | stylesheet_tag }} {{ 'font-awesome.min.css' | asset_url | stylesheet_tag }}
+  {{ 'themify-icons.css' | asset_url | stylesheet_tag }}
+  {{ 'flaticon.css' | asset_url | stylesheet_tag }}
+  {{ 'owl.carousel.min.css' | asset_url | stylesheet_tag }}
+  {{ 'simpleLightbox.css' | asset_url | stylesheet_tag }}
+  {{ 'nice-select.css' | asset_url | stylesheet_tag }}
+  {{ 'animate.css' | asset_url | stylesheet_tag }}
+  {{ 'jquery-ui.css' | asset_url | stylesheet_tag }}
+  
+  {{ 'main-style.css' | asset_url | stylesheet_tag }} {{ 'responsive.css' | asset_url | stylesheet_tag }}
+{{ 'style.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+</head>
+
+<body>
+  {% section 'top-menu' %}
+  {% section 'header' %}
+
+  <main role="main">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  <script src="{{ 'jquery-3.2.1.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'stellar.js' | asset_url }}" defer></script>
+  <script src="{{ 'simpleLightbox.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.nice-select.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'imagesloaded.pkgd.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'isotope-min.js' | asset_url }}" defer></script>
+  <script src="{{ 'owl.carousel.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.ajaxchimp.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.waypoints.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.counterup.js' | asset_url }}" defer></script>
+  <script src="{{ 'mail-script.js' | asset_url }}" defer></script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+</body>
+</html>

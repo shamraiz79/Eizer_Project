@@ -1,0 +1,83 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "top-menu": {
+        "type": "top-menu",
+        "settings": {
+          "phone": "Phone: +01 256 25 235",
+          "email": "email: info@eiser.com",
+          "right_menu": ""
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo": "shopify://shop_images/logo.png"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "link_list_yfPMnm": {
+            "type": "link_list",
+            "settings": {
+              "title": "Quick Links",
+              "menu": ""
+            }
+          },
+          "link_list_qDWkYa": {
+            "type": "link_list",
+            "settings": {
+              "title": "Quick Links",
+              "menu": ""
+            }
+          },
+          "link_list_Tmfm7L": {
+            "type": "link_list",
+            "settings": {
+              "title": "Quick Links",
+              "menu": ""
+            }
+          },
+          "link_list_JkKEaM": {
+            "type": "link_list",
+            "settings": {
+              "title": "Quick Links",
+              "menu": ""
+            }
+          },
+          "newsletter_rtUtQC": {
+            "type": "newsletter",
+            "settings": {
+              "title": "Newsletter",
+              "text": "You can trust us. we only send promo offers,"
+            }
+          }
+        },
+        "block_order": [
+          "link_list_yfPMnm",
+          "link_list_qDWkYa",
+          "link_list_Tmfm7L",
+          "link_list_JkKEaM",
+          "newsletter_rtUtQC"
+        ],
+        "settings": {
+          "facebook": "https://www.youtube.com/",
+          "twitter": "https://www.youtube.com/",
+          "dribbble": "https://www.youtube.com/",
+          "behance": "https://www.youtube.com/"
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}

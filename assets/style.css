@@ -1,0 +1,1451 @@
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+/* CSS Variables */
+:root {
+  --offwhite: #f8f9fa;
+  --body-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --text-color: #333333; 
+  --primary-color: #71cd14;
+  --separator-color: #cccccc; 
+  --transition: all 0.3s ease 0s;
+}
+
+/* =========================================
+   TOP MENU BAR
+========================================= */
+.top_menu {
+  background: var(--offwhite);
+  height: 40px; 
+  border-bottom: 1px solid #eeeeee;
+}
+
+/* Ensure the container matches your site's main width */
+.top_menu .container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+  height: 100%;
+}
+
+/* Flexbox perfectly pushes left/right content to the edges */
+.top_menu .row {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  height: 100%;
+  margin: 0; 
+}
+
+/* Left Side: Phone & Email */
+.top_menu .float-left {
+  display: flex;
+  align-items: center;
+  /* padding-left: 80px; <-- REMOVED! This was breaking the alignment */
+}
+
+.top_menu .float-left p {
+  color: var(--text-color);
+  font-size: 11px;
+  font-family: var(--body-font);
+  font-weight: 500;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px; 
+  padding: 0 18px;
+  border-right: 1px solid var(--separator-color); 
+  line-height: 12px; 
+}
+
+/* Removes padding from the far left so it sits flush with the edge */
+.top_menu .float-left p:first-child {
+  padding-left: 0;
+}
+
+.top_menu .float-left p:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+/* Right Side: Links */
+.top_menu .float-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top_menu .right_side {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.top_menu .right_side li {
+  display: inline-block;
+}
+
+.top_menu .right_side li a {
+  font-size: 11px;
+  color: var(--text-color);
+  font-family: var(--body-font);
+  font-weight: 500;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 18px;
+  border-right: 1px solid var(--separator-color); 
+  line-height: 12px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+/* Removes padding from the far right so it sits flush with the edge */
+.top_menu .right_side li:last-child a {
+  padding-right: 0;
+  border-right: none;
+}
+
+/* Hover Effect for Links */
+.top_menu .right_side li:hover a {
+  color: var(--primary-color);
+}
+ /* code for hamburger menu responsiveness */
+/* =========================================
+   BULLETPROOF MOBILE HEADER
+========================================= */
+.header_area {
+  position: relative;
+  z-index: 99999; /* Forces the entire header above your blue banner */
+  background: #ffffff;
+}
+
+.header_area .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+/* Hamburger Button Settings */
+.navbar-toggler {
+  display: none; 
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  outline: none;
+}
+
+/* The 3 Blue Lines */
+.navbar-toggler .icon-bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #005bff; /* The exact blue from your screenshot */
+  margin: 5px 0; /* Creates the space between the lines */
+  border-radius: 2px;
+}
+
+/* Mobile & Tablet Overrides */
+@media (max-width: 991px) {
+  .navbar-toggler {
+    display: block !important; /* Force hamburger to show */
+  }
+
+  /* The Dropdown Container */
+  #navbarSupportedContent {
+    display: none; /* Strictly hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+    padding: 15px;
+    z-index: 99998;
+  }
+
+  /* THE MAGIC CLASS: Forces the menu open */
+  #navbarSupportedContent.force-mobile-open {
+    display: block !important; 
+  }
+
+  /* Stack all the links on top of each other */
+  .center_nav {
+    display: block;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .center_nav .nav-item {
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .center_nav .nav-link {
+    display: block;
+    padding: 12px 10px;
+    color: #222222;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  /* Fix the right icons inside the mobile menu */
+  .right_nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0 10px 0;
+    margin: 0;
+    list-style: none;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 992px) {
+  #navbarSupportedContent {
+    display: flex !important;
+    flex-grow: 1;
+    align-items: center;
+  }
+  .center_nav {
+    display: flex;
+    margin: 0 auto;
+  }
+}
+ 
+
+
+/* header css code  */
+/* =========================================
+   MAIN HEADER AREA
+========================================= */
+.main_menu {
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.main_menu .container {
+  width: 100%;
+  max-width: 1140px; 
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Force the Navbar into a Flex layout */
+.main_menu .navbar {
+  display: flex;
+  align-items: center;
+  height: 80px; 
+}
+
+/* Mobile Toggler Hidden on Desktop */
+.navbar-toggler {
+  display: none;
+}
+
+/* 1. Left Zone: Logo */
+.navbar-brand {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* 2. Middle & Right Zones Container */
+.navbar-collapse {
+  flex: 3; 
+  display: flex;
+  height: 100%;
+}
+
+.navbar-collapse .row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+/* Center Zone: Nav Links */
+.center-nav-container {
+  flex: 2;
+  display: flex;
+  justify-content: center; 
+}
+
+.main_menu .center_nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 35px; 
+}
+
+/* This position:relative is required so the dropdown stays under the link */
+.main_menu .center_nav .nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 80px; /* Make the hover area take the full height of the bar */
+}
+
+.main_menu .center_nav .nav-link {
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--title-color);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.main_menu .center_nav .nav-item.active .nav-link,
+.main_menu .center_nav .nav-item:hover .nav-link {
+  color: var(--primary-color);
+}
+
+/* =========================================
+   DROPDOWN MENU STYLES
+========================================= */
+.main_menu .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 80px; /* Starts exactly where the header bar ends */
+  left: 0;
+  background: #ffffff;
+  padding: 15px 0;
+  list-style: none;
+  border-top: 3px solid var(--primary-color);
+  box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+  min-width: 220px;
+  z-index: 99;
+  margin: 0;
+}
+
+/* Show the dropdown on hover */
+.main_menu .submenu:hover .dropdown-menu {
+  display: block;
+}
+
+.main_menu .dropdown-menu .nav-item {
+  height: auto;
+  display: block;
+}
+
+.main_menu .dropdown-menu .nav-link {
+  color: var(--text-color);
+  text-transform: capitalize; /* Dropdown links are usually not fully uppercase */
+  font-size: 13px;
+  padding: 10px 25px;
+  display: block;
+}
+
+.main_menu .dropdown-menu .nav-link:hover {
+  color: var(--primary-color);
+  background: var(--offwhite);
+}
+
+/* 3. Right Zone: Icons */
+.right-icons-container {
+  flex: 1; 
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main_menu .right_nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 25px; 
+}
+
+.main_menu .right_nav .icons {
+  color: #222; 
+  font-size: 18px;
+  text-decoration: none;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.main_menu .right_nav .icons:hover {
+  color: var(--primary-color);
+}
+/* css for hero banner image */
+/* =========================================
+   HERO BANNER AREA
+========================================= */
+.home_banner_area {
+  position: relative;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/* Creates the tall banner and centers content vertically */
+.home_banner_area .banner_inner {
+  min-height: 600px; /* Adjust this to make the banner taller or shorter */
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center right; /* Keeps the man in the image visible */
+  background-repeat: no-repeat;
+  background-color: #222; /* Fallback color while image loads */
+}
+
+/* Recreating the Bootstrap container constraint */
+.home_banner_area .container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Constrain the text so it doesn't stretch across the man's face */
+.home_banner_area .banner_content {
+  max-width: 500px;
+}
+
+/* 1. Subheading ("MEN COLLECTION") */
+.home_banner_area .sub {
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+  font-family: var(--body-font);
+  font-weight: 500;
+}
+
+/* 2. Main Heading ("Show Your Personal Style") */
+.home_banner_area h3 {
+  font-size: 55px;
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  font-family: var(--body-font);
+  letter-spacing: -1px;
+}
+
+/* 3. Green Highlight Tags */
+.home_banner_area h3 span {
+  color: var(--primary-color);
+}
+
+/* 4. Description Text */
+.home_banner_area h4 {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 400;
+  margin-bottom: 35px;
+  font-family: var(--body-font);
+  line-height: 1.6;
+}
+
+/* =========================================
+   GLOBAL BUTTON STYLES
+========================================= */
+/* You can use this .main_btn class anywhere on your site! */
+.main_btn {
+  display: inline-block;
+  background: var(--primary-color);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 15px 35px;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: var(--transition);
+  letter-spacing: 0.5px;
+  border: 1px solid var(--primary-color);
+  font-family: var(--body-font);
+}
+
+/* Hover effect: Turns transparent with a green border */
+.main_btn:hover {
+  background: transparent;
+  color: var(--primary-color);
+}
+
+
+/* store feature section css code  */
+/* =========================================
+   STORE FEATURES AREA
+========================================= */
+.feature-area {
+  padding: 80px 0; /* Gives the whole section breathing room */
+  background: #ffffff; /* Matches the clean white background */
+}
+
+.feature-area .container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.feature-area .row {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  margin: 0 -15px;
+}
+
+/* Recreating the 4-column grid */
+.feature-area .feature-column {
+  width: 25%; /* 4 items per row */
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* The Individual Feature Box */
+.single-feature {
+  padding: 40px 20px; /* Lots of padding to match the airy look of the screenshot */
+  background: #ffffff;
+  border: 1px solid #eeeeee; /* The light gray border around each box */
+  text-align: center; /* Centers all icons and text perfectly */
+  transition: var(--transition);
+  margin-bottom: 30px;
+  height: 100%; /* Ensures all boxes are the exact same height */
+}
+
+.single-feature .title {
+  display: block;
+  text-decoration: none;
+}
+
+/* The Icons */
+.single-feature .title i {
+  font-size: 32px; /* Sized to match the screenshot */
+  color: var(--title-color); /* Dark gray/black */
+  margin-bottom: 20px;
+  display: inline-block;
+  transition: var(--transition);
+}
+
+/* The Headings (e.g., MONEY BACK GUARANTEE) */
+.single-feature .title h3 {
+  font-size: 13px; /* Slightly smaller for a modern look */
+  color: var(--title-color);
+  font-family: var(--body-font);
+  font-weight: 600;
+  text-transform: uppercase; /* Forces uppercase text like the image */
+  letter-spacing: 0.5px;
+  margin: 0;
+  transition: var(--transition);
+}
+
+/* The Description Text */
+.single-feature p {
+  color: var(--text-color); /* Lighter gray text */
+  font-family: var(--body-font);
+  font-size: 13px;
+  margin: 0;
+  margin-top: 15px;
+  line-height: 24px;
+}
+
+/* Hover Effects */
+.single-feature:hover {
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05); /* Adds a soft shadow when hovered */
+  border-color: transparent; /* Removes border when shadowed for a cleaner pop */
+}
+
+.single-feature:hover .title i,
+.single-feature:hover .title h3 {
+  color: var(--primary-color); /* Turns the icon and title green on hover */
+}
+
+/* Responsive Tablet (2 columns instead of 4) */
+@media (max-width: 991px) {
+  .feature-area .feature-column {
+    width: 50%;
+  }
+}
+
+/* Responsive Mobile (1 column) */
+@media (max-width: 575px) {
+  .feature-area .feature-column {
+    width: 100%;
+  }
+}
+
+/* feature products section css code  */
+/* =========================================
+   FEATURED PRODUCTS AREA
+========================================= */
+.feature_product_area {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+/* Section Title Fixes */
+.feature_product_area .main_title {
+  text-align: center;
+  margin-bottom: 60px;
+  width: 100%;
+}
+
+.feature_product_area .main_title h2 {
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--title-color);
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+.feature_product_area .main_title p {
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: var(--body-font);
+  margin: 0;
+}
+
+/* Product Grid */
+.feature_product_area .row {
+  display: flex;
+  flex-wrap: wrap;
+padding-left: 30px;
+padding-right: 30px;
+}
+
+.feature_product_area .feature-col {
+  width: 33.333%; /* 3 columns on desktop */
+  padding: 0 15px;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+
+/* =========================================
+   SINGLE PRODUCT CARD & HOVER EFFECTS
+========================================= */
+.single-product {
+  display: block;
+  width: 100%;
+  position: relative;
+  cursor: pointer; /* Makes the whole card look clickable */
+}
+
+/* Top: Image Area */
+.single-product .product-img {
+  background-color: #f1f2f4; 
+  position: relative;
+  overflow: hidden; /* Hides the green bar */
+}
+
+.single-product .product-img img,
+.single-product .product-img svg {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+/* The Green Hover Bar */
+.single-product .p_icon {
+  position: absolute;
+  bottom: -60px; /* Starts hidden below the image */
+  left: 0;
+  width: 100%;
+  background: var(--primary-color);
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: all 0.4s ease; /* Slide animation */
+  z-index: 2; /* Keeps it above the image */
+}
+
+/* Hover Effect 1: Slide up the green bar on CARD hover */
+.single-product:hover .p_icon {
+  bottom: 0;
+  opacity: 1;
+}
+
+/* The White Circle Icons inside the bar */
+.single-product .p_icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border-radius: 50%;
+  color: var(--title-color);
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect 2: Icon turns green inside white circle */
+.single-product .p_icon a:hover {
+  background: #ffffff;
+  color: var(--primary-color);
+}
+
+/* Bottom: Text & Price Area */
+.single-product .product-btm {
+  padding: 25px 20px;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-top: none; 
+  text-align: left;
+}
+
+.single-product .product-btm a {
+  text-decoration: none;
+}
+
+/* Product Title */
+.single-product .product-btm h4 {
+  font-size: 13px;
+  color: var(--title-color);
+  text-transform: uppercase;
+  font-weight: 500;
+  font-family: var(--body-font);
+  margin: 0;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+/* Hover Effect 3: Title turns green on CARD hover */
+.single-product:hover .product-btm h4 {
+  color: var(--primary-color);
+}
+
+/* Price Row */
+.single-product .product-btm .mt-3 {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.single-product .product-btm span {
+  font-size: 18px;
+  color: var(--title-color);
+  font-weight: 600;
+  font-family: var(--body-font);
+}
+
+.single-product .product-btm del {
+  font-size: 14px;
+  color: #bbbbbb;
+  font-family: var(--body-font);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+@media (max-width: 991px) {
+  .feature_product_area .feature-col {
+    width: 50%;
+  }
+}
+
+@media (max-width: 575px) {
+  .feature_product_area .feature-col {
+    width: 100%;
+  }
+}
+
+/* promotional offers section css code */
+/* =========================================
+   PROMOTIONAL OFFER AREA
+========================================= */
+.offer_area {
+  margin-top: 70px; /* Gap from the featured products section */
+  background-color: #f9f9fa; /* Fallback color matching the screenshot */
+  background-size: cover;
+  background-position: center left; /* Keeps the image anchored to the left */
+  background-repeat: no-repeat;
+  min-height: 500px; /* Ensures the banner is tall enough */
+  display: flex;
+  align-items: center; /* Vertically centers the content */
+}
+
+.offer_area .container {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Flexbox to push the content to the right */
+.offer_wrapper {
+  display: flex;
+  justify-content: flex-end; /* Pushes the inner div to the right side */
+  width: 100%;
+}
+
+.offer_content {
+  width: 100%;
+  max-width: 500px; /* Prevents the text from stretching too wide */
+  text-align: center; /* Centers the text within its own right-aligned box */
+}
+
+/* Typography matching the screenshot */
+.offer_content h3 {
+  font-size: 16px;
+  color: #555555;
+  font-family: var(--body-font);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+
+.offer_content h2 {
+  font-size: 80px; /* Huge text for the 50% OFF */
+  color: #222222;
+  font-family: var(--body-font);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0 0 35px 0;
+  letter-spacing: -2px;
+}
+
+.offer_content .main_btn {
+  margin-bottom: 25px;
+}
+
+.offer_content p {
+  color: #797979;
+  font-size: 14px;
+  font-family: var(--body-font);
+  margin: 0;
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 991px) {
+  .offer_area {
+    background-position: center center;
+  }
+  .offer_wrapper {
+    justify-content: center; /* Centers text on mobile/tablet */
+    background: rgba(255, 255, 255, 0.85); /* Adds a readable overlay if image is behind text */
+    padding: 40px 20px;
+    border-radius: 5px;
+  }
+}
+/* new products css code  */
+/* =========================================
+   NEW PRODUCTS AREA (SPLIT LAYOUT)
+========================================= */
+.new_product_area {
+  padding-top: 80px;
+}
+
+/* Main Layout Grid */
+.new-product-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+  align-items: stretch; /* Forces the left column to stretch to the height of the right grid */
+}
+
+.left-column, 
+.right-column {
+  width: 50%; /* 50/50 split on desktop */
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* Right Side Grid Setup */
+.right-product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.right-product-col {
+  width: 50%; /* 2 items per row inside the right column */
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   LEFT SIDE: HERO PRODUCT STYLING
+========================================= */
+.new_product {
+  background: #f6f6f6; /* Beautiful, clean light grey background */
+  padding: 60px 40px;
+  text-align: center;
+  height: 100%; /* Allows it to stretch to the bottom of the container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers everything vertically */
+  align-items: center;
+}
+
+.new_product h5 {
+  color: #555555;
+  font-size: 13px;
+  font-family: var(--body-font);
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.new_product h3 {
+  font-size: 24px;
+  color: #222222;
+  font-family: var(--body-font);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+/* The Left Image Container */
+.new_product .product-img {
+  margin-bottom: 40px;
+  width: 100%;
+  max-width: 400px; /* Prevents the image from getting too massive on wide screens */
+}
+
+.new_product .product-img img,
+.new_product .product-img svg {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+.new_product:hover .product-img img {
+  transform: scale(1.05); /* Very subtle zoom effect on hover */
+}
+
+/* The Left Price */
+.new_product h4 {
+  font-size: 26px; /* Matches the larger price font in your screenshot */
+  color: #222222; /* Dark sleek color, not green */
+  font-weight: 500;
+  font-family: var(--body-font);
+  margin-bottom: 25px;
+}
+
+/* Add to Cart Button Form Fixes */
+.new_product form {
+  margin: 0;
+}
+
+/* Uses your primary global button style */
+.new_product .main_btn {
+  background: var(--primary-color);
+  color: #ffffff;
+  padding: 14px 35px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+}
+
+.new_product .main_btn:hover {
+  background: #222222; /* Turns dark grey on hover for a premium feel */
+  color: #ffffff;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+/* Tablet */
+@media (max-width: 991px) {
+  .left-column, 
+  .right-column {
+    width: 100%; /* Stacks the hero product on top of the grid */
+  }
+  .left-column {
+    margin-bottom: 30px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 575px) {
+  .right-product-col {
+    width: 100%; /* Makes the small products take up full width on phones */
+  }
+  .new_product {
+    padding: 40px 20px; /* Less padding on small phone screens */
+  }
+}
+/* inspired products section css code  */
+/* =========================================
+   INSPIRED PRODUCTS AREA
+========================================= */
+.inspired_product_area {
+  padding-top: 80px;
+  padding-bottom: 70px;
+}
+
+/* Section Title Styling (Matches the other sections) */
+.inspired_product_area .main_title {
+  text-align: center;
+  margin-bottom: 60px;
+  width: 100%;
+  padding-top:100px;
+}
+
+.inspired_product_area .main_title h2 {
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #222222;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.inspired_product_area .main_title p {
+  color: #797979;
+  font-size: 14px;
+  font-family: var(--body-font);
+  margin: 0;
+}
+
+/* 4-Column Flexbox Grid */
+.inspired-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.inspired-col {
+  width: 25%; /* Forces 4 items per row on desktop */
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+/* Tablet (Drops to 2 columns) */
+@media (max-width: 991px) {
+  .inspired-col {
+    width: 50%; 
+  }
+}
+
+/* Mobile (Drops to 1 column) */
+@media (max-width: 575px) {
+  .inspired-col {
+    width: 100%; 
+  }
+}
+/* our latest blog section css code  */
+/* =========================================
+   LATEST BLOG AREA
+========================================= */
+.blog-area {
+  padding-top: 70px; /* Requested padding to space from Inspired Products */
+  padding-bottom: 70px;
+  background: #ffffff;
+}
+
+/* Section Title Styling */
+.blog-area .main_title {
+  text-align: center;
+  margin-bottom: 60px;
+  width: 100%;
+}
+
+.blog-area .main_title h2 {
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #222222;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.blog-area .main_title p {
+  color: #797979;
+  font-size: 14px;
+  font-family: var(--body-font);
+  margin: 0;
+}
+
+/* Flexbox Grid */
+.blog-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.blog-col {
+  width: 33.333%; /* 3 columns on desktop */
+  padding: 0 15px;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+
+/* =========================================
+   SINGLE BLOG CARD STYLING
+========================================= */
+.single-blog {
+  background: transparent; /* Removed background to match screenshot */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image Container */
+.single-blog .thumb {
+  overflow: hidden;
+  display: block;
+}
+
+.single-blog .thumb img {
+  width: 100%;
+  height: 250px; /* Fixed height for uniformity */
+  object-fit: cover; 
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.single-blog:hover .thumb img {
+  transform: scale(1.05); /* Very slight zoom on hover */
+}
+
+/* Details Section */
+.single-blog .short_details {
+  padding: 25px 0 0 0; /* Zero left/right padding so text aligns with the image edge */
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+  text-align: left; /* Forces left alignment */
+}
+
+/* Meta Tags (Author & Comments) */
+.single-blog .meta-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.single-blog .meta-top a {
+  color: #999999; /* Light gray text */
+  font-size: 12px;
+  font-family: var(--body-font);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.single-blog .meta-top a i {
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.single-blog .meta-top a:hover {
+  color: var(--primary-color);
+}
+
+/* Blog Title */
+.single-blog h4 {
+  font-size: 18px;
+  color: #222222;
+  font-family: var(--body-font);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 15px 0;
+  transition: all 0.3s ease;
+}
+
+.single-blog h4:hover {
+  color: var(--primary-color);
+}
+
+.single-blog .d-block {
+  text-decoration: none;
+}
+
+/* Excerpt Text */
+.single-blog .text-wrap p {
+  color: #797979; /* Slightly darker gray for readability */
+  font-size: 14px;
+  line-height: 24px;
+  font-family: var(--body-font);
+  margin: 0 0 25px 0; /* Space between text and button */
+}
+
+/* Learn More Link */
+.single-blog .blog_btn {
+  color: #222222;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-top: auto; /* Pushes button to bottom if texts are different lengths */
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+}
+
+.single-blog .blog_btn:hover {
+  color: var(--primary-color);
+}
+
+/* The Arrow Icon */
+.single-blog .blog_btn span {
+  font-size: 11px;
+  transition: all 0.3s ease;
+  margin-left: 8px; /* Spacing between text and arrow */
+}
+
+.single-blog .blog_btn:hover span {
+  transform: translateX(5px); /* Arrow slides slightly to the right on hover */
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+@media (max-width: 991px) {
+  .blog-col {
+    width: 50%; /* 2 columns on tablet */
+  }
+}
+
+@media (max-width: 575px) {
+  .blog-col {
+    width: 100%; /* 1 column on mobile */
+  }
+}
+/* css code for footer section */
+/* =========================================
+   FOOTER AREA (DARK THEME)
+========================================= */
+.footer-area {
+  padding: 80px 0 60px 0;
+  background-color: #0b0c1b; /* Matches the deep dark navy/black background */
+}
+
+/* This is the magic rule that fixes your left/right padding! */
+.footer-area .container {
+  width: 100%;
+  max-width: 1140px; /* Constrains the width like your screenshot */
+  margin: 0 auto; /* Centers the container */
+  padding: 0 15px;
+}
+
+/* Main Grid Layout */
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+/* 4 Thin Columns */
+.footer-col-2 {
+  width: 16.666%; 
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* 1 Wide Column for Newsletter */
+.footer-col-4 {
+  width: 33.333%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* Widget Styling */
+.single-footer-widget {
+  margin-bottom: 30px;
+}
+
+/* Headings (White) */
+.single-footer-widget h4 {
+  font-size: 18px;
+  color: #ffffff;
+  font-family: var(--body-font);
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+/* Links inside widget (Grayish) */
+.single-footer-widget ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.single-footer-widget ul li {
+  margin-bottom: 15px;
+}
+
+.single-footer-widget ul li a {
+  color: #79798d; /* Matches the muted grayish-blue text */
+  font-size: 14px;
+  font-family: var(--body-font);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.single-footer-widget ul li a:hover {
+  color: var(--primary-color); /* Turns green on hover */
+}
+
+.single-footer-widget p {
+  color: #79798d;
+  font-size: 14px;
+  line-height: 24px;
+  font-family: var(--body-font);
+  margin-bottom: 20px;
+}
+
+/* Newsletter Form Elements (Flush and Dark) */
+.single-footer-widget .form-inline {
+  display: flex;
+  align-items: center;
+}
+
+.single-footer-widget .form-control {
+  flex: 1; 
+  background: #2b2d3b; /* Dark grey input background */
+  color: #ffffff;
+  border: none;
+  padding: 0 15px;
+  font-size: 13px;
+  outline: none;
+  height: 45px; 
+}
+
+.single-footer-widget .form-control::placeholder {
+  color: #79798d;
+}
+
+.single-footer-widget .click-btn {
+  background: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 0 25px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  height: 45px; 
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-footer-widget .click-btn:hover {
+  background: #ffffff;
+  color: var(--title-color);
+}
+
+/* =========================================
+   FOOTER BOTTOM (COPYRIGHT & SOCIALS)
+========================================= */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.footer-text-col,
+.footer-social-col {
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* Copyright Text */
+.footer-text {
+  color: #ffffff;
+  font-size: 14px;
+  font-family: var(--body-font);
+}
+
+.footer-text a {
+  color: var(--primary-color); 
+  text-decoration: none;
+}
+
+/* Social Icons (Dark Squares) */
+.footer-social {
+  display: flex;
+  gap: 10px; 
+}
+
+.footer-social a {
+  background: #2b2d3b; 
+  color: #ffffff; 
+  font-size: 14px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+/* Tablet View */
+@media (max-width: 991px) {
+  .footer-col-2 {
+    width: 50%; /* Changed to 50% so the 4 link columns create a perfect 2x2 grid */
+  }
+  .footer-col-4 {
+    width: 100%; /* Newsletter drops below the grid and takes full width */
+    margin-top: 40px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px; 
+  }
+  .footer-social {
+    justify-content: center; 
+  }
+}
+
+/* Mobile Phone View */
+@media (max-width: 575px) {
+  .footer-col-2 {
+    width: 100%; /* Link columns now stack 1 by 1 on small screens */
+  }
+  .single-footer-widget {
+    text-align: center; /* Centers all the text on mobile for a cleaner look */
+  }
+  .single-footer-widget ul li {
+    margin-bottom: 12px;
+  }
+  /* Stacks the newsletter input and button on mobile so it doesn't squish */
+  .single-footer-widget .form-inline {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .single-footer-widget .form-control,
+  .single-footer-widget .click-btn {
+    width: 100%;
+  }
+}

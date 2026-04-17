@@ -1,0 +1,149 @@
+<footer class="footer-area section_gap" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="footer-row">
+      
+      {% for block in section.blocks %}
+        {% case block.type %}
+          
+          {% when 'link_list' %}
+            <div class="footer-col-2 single-footer-widget" {{ block.shopify_attributes }}>
+              <h4>{{ block.settings.title }}</h4>
+              <ul>
+                {% if block.settings.menu != blank %}
+                  {% for link in linklists[block.settings.menu].links %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+                {% else %}
+                  <li><a href="#">Managed Website</a></li>
+                  <li><a href="#">Manage Reputation</a></li>
+                  <li><a href="#">Power Tools</a></li>
+                  <li><a href="#">Marketing Service</a></li>
+                {% endif %}
+              </ul>
+            </div>
+            
+          {% when 'newsletter' %}
+            <div class="footer-col-4 single-footer-widget" {{ block.shopify_attributes }}>
+              <h4>{{ block.settings.title }}</h4>
+              <p>{{ block.settings.text }}</p>
+              
+              <div class="form-wrap" id="mc_embed_signup">
+                {% form 'customer', class: 'form-inline' %}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <input class="form-control" name="contact[email]" placeholder="Your Email Address" required type="email">
+                  <button class="click-btn btn btn-default" type="submit">Subscribe</button>
+                {% endform %}
+              </div>
+            </div>
+            
+        {% endcase %}
+      {% endfor %}
+      
+    </div>
+
+    <div class="footer-bottom row align-items-center">
+      <div class="footer-text-col">
+        <p class="footer-text m-0">
+          Copyright &copy; {{ 'now' | date: "%Y" }}Copyright ©2026 All rights reserved | This template is made with  | {{ shop.name }}
+        </p>
+      </div>
+      
+      <div class="footer-social-col footer-social">
+        {% if section.settings.facebook != blank %}
+          <a href="{{ section.settings.facebook }}" target="_blank"><i class="fa fa-facebook"></i></a>
+        {% endif %}
+        {% if section.settings.twitter != blank %}
+          <a href="{{ section.settings.twitter }}" target="_blank"><i class="fa fa-twitter"></i></a>
+        {% endif %}
+        {% if section.settings.dribbble != blank %}
+          <a href="{{ section.settings.dribbble }}" target="_blank"><i class="fa fa-dribbble"></i></a>
+        {% endif %}
+        {% if section.settings.behance != blank %}
+          <a href="{{ section.settings.behance }}" target="_blank"><i class="fa fa-behance"></i></a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Social Media Links"
+    },
+    {
+      "type": "url",
+      "id": "facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "twitter",
+      "label": "Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "dribbble",
+      "label": "Dribbble URL"
+    },
+    {
+      "type": "url",
+      "id": "behance",
+      "label": "Behance URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Select Menu"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter Column",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Subtext",
+          "default": "You can trust us. we only send promo offers,"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "link_list", "settings": { "title": "Top Products" } },
+        { "type": "link_list", "settings": { "title": "Quick Links" } },
+        { "type": "link_list", "settings": { "title": "Features" } },
+        { "type": "link_list", "settings": { "title": "Resources" } },
+        { "type": "newsletter" }
+      ]
+    }
+  ]
+}
+{% endschema %}

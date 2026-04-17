@@ -1,0 +1,130 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "bg_image": "shopify://shop_images/banner-bg.jpg",
+        "sub_heading": "men Collection",
+        "main_heading": "<span>Show</span> Your <br>Personal <span>Style</span>",
+        "description": "Fowl saw dry which a above together place.",
+        "button_label": "View Collection",
+        "button_link": ""
+      }
+    },
+    "features": {
+      "type": "store-features",
+      "blocks": {
+        "feature_TKUQrU": {
+          "type": "feature",
+          "settings": {
+            "icon_class": "flaticon-money",
+            "title": "Money back guarantee",
+            "text": "Shall open divide a one",
+            "link": ""
+          }
+        },
+        "feature_EBwGcz": {
+          "type": "feature",
+          "settings": {
+            "icon_class": "flaticon-money",
+            "title": "Money back guarantee",
+            "text": "Shall open divide a one",
+            "link": ""
+          }
+        },
+        "feature_Ph9zeC": {
+          "type": "feature",
+          "settings": {
+            "icon_class": "flaticon-money",
+            "title": "Money back guarantee",
+            "text": "Shall open divide a one",
+            "link": ""
+          }
+        },
+        "feature_aULDap": {
+          "type": "feature",
+          "settings": {
+            "icon_class": "flaticon-money",
+            "title": "Money back guarantee",
+            "text": "Shall open divide a one",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature_TKUQrU",
+        "feature_EBwGcz",
+        "feature_Ph9zeC",
+        "feature_aULDap"
+      ],
+      "settings": {}
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "title": "Featured product",
+        "subtitle": "Bring called seed first of third give itself now ment",
+        "feature_collection": "our-feature-products",
+        "product_limit": 3
+      }
+    },
+    "offer": {
+      "type": "promotional-offer",
+      "settings": {
+        "bg_image": "shopify://shop_images/offer-bg.png",
+        "sub_title": "ALL MEN’S COLLECTION",
+        "main_title": "50% OFF",
+        "button_label": "Discover Now",
+        "button_link": "",
+        "bottom_text": "Limited Time Offer"
+      }
+    },
+    "new_products": {
+      "type": "new-products",
+      "settings": {
+        "title": "New Products",
+        "subtitle": "Bring called seed first of third give itself now ment",
+        "hero_subtitle": "Collection of 2026",
+        "hero_product": "men-s-summer-t-shirt",
+        "right_collection": "new-products"
+      }
+    },
+    "inspired_products": {
+      "type": "inspired-products",
+      "settings": {
+        "title": "Inspired products",
+        "subtitle": "Bring called seed first of third give itself now ment",
+        "inspired_collection": "inspired-product-collection",
+        "product_limit": 8
+      }
+    },
+    "blog": {
+      "type": "latest-blog",
+      "settings": {
+        "title": "Latest Blog",
+        "subtitle": "Bring called seed first of third give itself now ment",
+        "blog": "sports",
+        "post_limit": 3,
+        "button_label": "Learn More"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "features",
+    "featured_products",
+    "offer",
+    "new_products",
+    "inspired_products",
+    "blog"
+  ]
+}

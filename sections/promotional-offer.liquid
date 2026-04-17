@@ -1,0 +1,77 @@
+<section class="offer_area" id="section-{{ section.id }}"
+  {% if section.settings.bg_image != blank %}
+    style="background-image: url('{{ section.settings.bg_image | image_url: width: 1600 }}');"
+  {% endif %}>
+  
+  <div class="container">
+    <div class="offer_wrapper">
+      <div class="offer_content">
+        
+        {% if section.settings.sub_title != blank %}
+          <h3>{{ section.settings.sub_title }}</h3>
+        {% endif %}
+        
+        {% if section.settings.main_title != blank %}
+          <h2>{{ section.settings.main_title }}</h2>
+        {% endif %}
+        
+        {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="main_btn">{{ section.settings.button_label }}</a>
+        {% endif %}
+        
+        {% if section.settings.bottom_text != blank %}
+          <p>{{ section.settings.bottom_text }}</p>
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Promotional Offer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+      "info": "Upload a wide banner image. The text will sit on the right side."
+    },
+    {
+      "type": "text",
+      "id": "sub_title",
+      "label": "Sub Heading",
+      "default": "ALL MEN’S COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Discount Text",
+      "default": "50% OFF"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Discover Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text",
+      "default": "Limited Time Offer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promotional Offer",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

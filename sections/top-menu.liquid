@@ -1,0 +1,67 @@
+<div class="top_menu">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="float-left">
+          {% if section.settings.phone != blank %}
+            <p>{{ section.settings.phone }}</p>
+          {% endif %}
+          
+          {% if section.settings.email != blank %}
+            <p>{{ section.settings.email }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="float-right">
+          <ul class="right_side">
+            {% if section.settings.right_menu != blank %}
+              {% for link in section.settings.right_menu.links %}
+                <li>
+                  <a href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            {% else %}
+              <li><a href="#">gift card</a></li>
+              <li><a href="#">track order</a></li>
+              <li><a href="#">Contact Us</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Top Menu",
+  "settings": [
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "Phone: +01 256 25 235"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "email: info@eiser.com"
+    },
+    {
+      "type": "link_list",
+      "id": "right_menu",
+      "label": "Right Side Menu",
+      "info": "Select a menu from your Shopify Navigation to display here."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Top Menu"
+    }
+  ]
+}
+{% endschema %}

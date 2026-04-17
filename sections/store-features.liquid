@@ -1,0 +1,71 @@
+<section class="feature-area section_gap_bottom_custom" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="row">
+      
+      {% for block in section.blocks %}
+        <div class="col-lg-3 col-md-6 feature-column" {{ block.shopify_attributes }}>
+          <div class="single-feature">
+            <a href="{{ block.settings.link | default: '#' }}" class="title">
+              {% if block.settings.icon_class != blank %}
+                <i class="{{ block.settings.icon_class }}"></i>
+              {% endif %}
+              <h3>{{ block.settings.title }}</h3>
+            </a>
+            <p>{{ block.settings.text }}</p>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Store Features",
+  "max_blocks": 4,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon_class",
+          "label": "Icon Class",
+          "default": "flaticon-money",
+          "info": "Type the icon class here (e.g., flaticon-money, flaticon-truck, flaticon-support)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Money back guarantee"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Shall open divide a one"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Features",
+      "blocks": [
+        { "type": "feature", "settings": { "icon_class": "flaticon-money", "title": "Money back guarantee" } },
+        { "type": "feature", "settings": { "icon_class": "flaticon-truck", "title": "Free Delivery" } },
+        { "type": "feature", "settings": { "icon_class": "flaticon-support", "title": "Always support" } },
+        { "type": "feature", "settings": { "icon_class": "flaticon-blockchain", "title": "Secure payment" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
