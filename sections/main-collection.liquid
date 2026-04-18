@@ -1,0 +1,150 @@
+<section class="banner_area" style="background: #f9f9fa; padding: 60px 0; margin-bottom: 50px;">
+  <div class="banner_inner d-flex align-items-center">
+    <div class="container">
+      <div class="banner_content d-md-flex justify-content-between align-items-center">
+        <div class="mb-3 mb-md-0">
+          <h2 style="color: #222; font-size: 36px; font-weight: 700;">{{ collection.title }}</h2>
+          {% if collection.description != blank %}
+            <p style="color: #777; margin-top: 10px;">{{ collection.description | strip_html | truncatewords: 15 }}</p>
+          {% else %}
+            <p style="color: #777; margin-top: 10px;">Explore our latest products and exclusive offers.</p>
+          {% endif %}
+        </div>
+        <div class="page_link" style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+          <a href="{{ routes.root_url }}" style="color: #777; text-decoration: none;">Home</a> / 
+          <a href="{{ routes.all_products_collection_url }}" style="color: #777; text-decoration: none;">Shop</a> / 
+          <a href="{{ collection.url }}" style="color: #222; font-weight: 500; text-decoration: none;">{{ collection.title }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="cat_product_area section_gap" id="section-{{ section.id }}">
+  <div class="container">
+    <div class="row flex-row-reverse collection-layout">
+      
+      <div class="col-lg-9">
+        
+        <div class="product_top_bar d-flex justify-content-between align-items-center mb-4" style="background: #f9f9fa; padding: 15px 20px;">
+          <div class="left_dorp">
+            <form id="CollectionFiltersForm" class="d-flex align-items-center gap-3">
+              <select name="sort_by" class="sorting form-control" id="SortBy" onchange="document.getElementById('CollectionFiltersForm').submit();" style="border: none; background: transparent; font-size: 13px; color: #777; outline: none; cursor: pointer;">
+                {%- for option in collection.sort_options -%}
+                  <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected="selected"{% endif %}>
+                    {{ option.name }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </form>
+          </div>
+          <div class="right_dorp">
+            <span style="font-size: 13px; color: #777;">Showing {{ collection.products_count }} products</span>
+          </div>
+        </div>
+        
+        <div class="latest_product_inner">
+          <div class="row">
+            {% paginate collection.products by 12 %}
+              {% for product in collection.products %}
+                <div class="col-lg-4 col-md-6 mb-5">
+                  <div class="single-product">
+                    <div class="product-img">
+                      <a href="{{ product.url }}">
+                        <img class="card-img w-100" src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}" />
+                      </a>
+                      <div class="p_icon">
+                        <a href="{{ product.url }}"><i class="ti-eye"></i></a>
+                        <a href="#"><i class="ti-heart"></i></a>
+                        <a href="{{ product.url }}"><i class="ti-shopping-cart"></i></a>
+                      </div>
+                    </div>
+                    <div class="product-btm mt-3 text-center">
+                      <a href="{{ product.url }}" class="d-block" style="text-decoration: none;">
+                        <h4 style="font-size: 14px; color: #222; text-transform: uppercase;">{{ product.title }}</h4>
+                      </a>
+                      <div class="mt-2">
+                        <span class="mr-3" style="font-size: 16px; font-weight: 500; color: #222;">{{ product.price | money }}</span>
+                        {% if product.compare_at_price > product.price %}
+                          <del style="color: #999; font-size: 14px;">{{ product.compare_at_price | money }}</del>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <div class="col-12 text-center py-5">
+                  <p>No products found in this collection.</p>
+                </div>
+              {% endfor %}
+
+              {% if paginate.pages > 1 %}
+                <div class="col-12 text-center mt-4">
+                  {{ paginate | default_pagination }}
+                </div>
+              {% endif %}
+            {% endpaginate %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="left_sidebar_area">
+          <form class="filter-form">
+            {%- for filter in collection.filters -%}
+              <aside class="left_widgets p_filter_widgets mb-5">
+                <div class="l_w_title" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; position: relative;">
+                  <h3 style="font-size: 16px; font-weight: 600; color: #222; margin: 0;">{{ filter.label }}</h3>
+                  <div style="position: absolute; bottom: -1px; left: 0; width: 40px; height: 1px; background: #71cd14;"></div>
+                </div>
+                
+                <div class="widgets_inner">
+                  {%- case filter.type -%}
+                    {%- when 'list' -%}
+                      <ul class="list" style="list-style: none; padding: 0; margin: 0;">
+                        {%- for filter_value in filter.values -%}
+                          <li style="margin-bottom: 10px;">
+                            <label style="font-size: 13px; color: #777; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                              <input type="checkbox"
+                                name="{{ filter_value.param_name }}"
+                                value="{{ filter_value.value }}"
+                                id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                {% if filter_value.active -%}checked{%- endif %}
+                                style="accent-color: #71cd14;"
+                                onchange="this.form.submit();"
+                              >
+                              <span {% if filter_value.active %}style="color: #71cd14;"{% endif %}>
+                                {{ filter_value.label }} ({{ filter_value.count }})
+                              </span>
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+
+                    {%- when 'price_range' -%}
+                      <div class="price-filter d-flex align-items-center gap-2">
+                        <input name="{{ filter.min_value.param_name }}" type="number" placeholder="Min" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" class="form-control" style="font-size: 13px; border-radius: 0;" onchange="this.form.submit();">
+                        <span style="color: #777;">-</span>
+                        <input name="{{ filter.max_value.param_name }}" type="number" placeholder="Max" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" class="form-control" style="font-size: 13px; border-radius: 0;" onchange="this.form.submit();">
+                      </div>
+                  {%- endcase -%}
+                </div>
+              </aside>
+            {%- endfor -%}
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection Settings"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,215 @@
+<section class="custom-banner-area" style="background-color: {{ section.settings.banner_bg_color }};">
+  <div class="custom-container">
+    <div class="banner-content-wrap">
+      <div class="banner-text">
+        <h2>{{ section.settings.banner_title | escape }}</h2>
+        <p>{{ section.settings.banner_subtitle | escape }}</p>
+      </div>
+      <div class="banner-breadcrumbs">
+        <a href="{{ routes.root_url }}">Home</a> / 
+        <span>{{ section.settings.banner_title | escape }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="single-product-area" id="section-{{ section.id }}">
+  <div class="custom-container">
+    <div class="product-grid-layout">
+      
+      <div class="product-gallery-col">
+        <div class="s_product_img_wrap">
+          <img id="MainProductImage" src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.title | escape }}" />
+          
+          <div class="thumbnail-container">
+            {% for media in product.media %}
+              <img class="product-thumbnail {% if forloop.first %}active{% endif %}" src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" data-main-src="{{ media | image_url: width: 800 }}" onclick="changeMainImage(this)" />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-details-col">
+        <div class="s_product_text">
+          <h3>{{ product.title }}</h3>
+          <h2>{{ product.price | money }}</h2>
+          
+          <ul class="product-meta-list">
+            {% if section.settings.show_category %}
+              <li><a href="#"><span>Category</span> : <span class="text-green">{{ product.type | default: 'Household' }}</span></a></li>
+            {% endif %}
+            {% if section.settings.show_availability %}
+              <li><a href="#"><span>Availability</span> : {% if product.available %}In Stock{% else %}Out of Stock{% endif %}</a></li>
+                
+            {% endif %}
+          </ul>
+          
+          <p class="product-short-desc">{{ product.description | strip_html | truncatewords: 40 }}</p>
+          
+          {% form 'product', product, class: 'custom-product-form' %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            
+            <div class="product-qty-wrap">
+              <label for="qty">Quantity:</label>
+              <input type="number" name="quantity" id="sst" min="1" value="1" title="Quantity:" class="custom-qty-input" />
+            </div>
+            
+            <div class="product-action-wrap">
+              <button type="submit" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
+                {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
+              </button>
+              <a class="icon-btn" href="#"><i class="ti-gem"></i></a>
+              <a class="icon-btn" href="#"><i class="ti-heart"></i></a>
+            </div>
+          {% endform %}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="product-tabs-area">
+  <div class="custom-container">
+    
+    <ul class="custom-nav-tabs" id="myTab">
+      <li><a class="tab-link active" data-target="description">Description</a></li>
+      
+      {% if section.settings.show_specs_tab %}
+        <li><a class="tab-link" data-target="specification">Specification</a></li>
+      {% endif %}
+      
+      {% if section.settings.show_comments_tab %}
+        <li><a class="tab-link" data-target="comments">Comments</a></li>
+      {% endif %}
+      
+      {% if section.settings.show_reviews_tab %}
+        <li><a class="tab-link" data-target="reviews">Reviews</a></li>
+      {% endif %}
+    </ul>
+    
+    <div class="custom-tab-content">
+      
+      <div class="tab-pane active" id="description">
+        {{ product.description }}
+      </div>
+      
+      {% if section.settings.show_specs_tab %}
+      <div class="tab-pane" id="specification">
+        <table class="custom-spec-table">
+          <tbody>
+            <tr><td><h5>Width</h5></td><td><p>128mm</p></td></tr>
+            <tr><td><h5>Height</h5></td><td><p>508mm</p></td></tr>
+            <tr><td><h5>Depth</h5></td><td><p>85mm</p></td></tr>
+            <tr><td><h5>Weight</h5></td><td><p>52gm</p></td></tr>
+            <tr><td><h5>Quality checking</h5></td><td><p>yes</p></td></tr>
+            <tr><td><h5>Freshness Duration</h5></td><td><p>03days</p></td></tr>
+            <tr><td><h5>When packeting</h5></td><td><p>Without touch of hand</p></td></tr>
+            <tr><td><h5>Each Box contains</h5></td><td><p>60pcs</p></td></tr>
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      
+      {% if section.settings.show_comments_tab %}
+      <div class="tab-pane" id="comments"><p class="placeholder-text">Comments section.</p></div>
+      {% endif %}
+      
+      {% if section.settings.show_reviews_tab %}
+      <div class="tab-pane" id="reviews"><p class="placeholder-text">Reviews section.</p></div>
+      {% endif %}
+      
+    </div>
+  </div>
+</section>
+
+<script>
+  function changeMainImage(element) {
+    document.getElementById('MainProductImage').src = element.getAttribute('data-main-src');
+    document.querySelectorAll('.product-thumbnail').forEach(thumb => thumb.classList.remove('active'));
+    element.classList.add('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        tabLinks.forEach(l => l.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+        
+        this.classList.add('active');
+        document.getElementById(this.getAttribute('data-target')).classList.add('active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner Settings"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "default": "Product Details"
+    },
+    {
+      "type": "text",
+      "id": "banner_subtitle",
+      "label": "Banner Subtitle",
+      "default": "Very us move be blessed multiply night"
+    },
+    {
+      "type": "color",
+      "id": "banner_bg_color",
+      "label": "Banner Background",
+      "default": "#f9f9fa"
+    },
+    {
+      "type": "header",
+      "content": "Product Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category",
+      "label": "Show Category",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_availability",
+      "label": "Show Availability",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Tabs Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_specs_tab",
+      "label": "Show Specification Tab",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comments_tab",
+      "label": "Show Comments Tab",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews_tab",
+      "label": "Show Reviews Tab",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
