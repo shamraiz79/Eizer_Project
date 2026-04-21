@@ -55,9 +55,11 @@
             </div>
             
             <div class="product-action-wrap">
-              <button type="submit" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
-                {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
-              </button>
+          <button type="submit" name="add" id="AddToCartBtn" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
+  <span id="AddToCartText">
+    {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
+  </span>
+</button>
               <a class="icon-btn" href="#"><i class="ti-gem"></i></a>
               <a class="icon-btn" href="#"><i class="ti-heart"></i></a>
             </div>
@@ -237,6 +239,138 @@
       });
     });
   });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const productForm = document.querySelector('.custom-product-form');
+  const addToCartBtn = document.getElementById('AddToCartBtn');
+  const addToCartText = document.getElementById('AddToCartText');
+
+  // Find Drawer Elements globally
+  const drawer = document.getElementById('CartDrawer');
+  const overlay = document.getElementById('CartDrawerOverlay');
+  const closeBtn = document.getElementById('CartDrawerClose');
+  const drawerBody = document.getElementById('CartDrawerBody');
+  const drawerTotal = document.getElementById('CartDrawerTotal');
+
+  // 1. ADD TO CART INTERCEPT
+  if (productForm) {
+    productForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      addToCartText.innerHTML = 'Adding...';
+      addToCartBtn.disabled = true;
+
+      const formData = new FormData(productForm);
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          alert('Error: ' + data.description);
+          resetMainButton();
+          return;
+        }
+        resetMainButton();
+        updateAndOpenDrawer(); // Success! Open Drawer
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        resetMainButton();
+      });
+    });
+  }
+
+  function resetMainButton() {
+    addToCartText.innerHTML = 'Add to Cart';
+    addToCartBtn.disabled = false;
+  }
+
+  // 2. FETCH LATEST CART & BUILD HTML
+  function updateAndOpenDrawer() {
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        buildCartHTML(cart);
+        openDrawer();
+      });
+  }
+
+  // 3. DYNAMICALLY GENERATE CART ITEMS & PRICING
+  function buildCartHTML(cart) {
+    // Format money (converts 14999 cents to $149.99)
+    drawerTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
+
+    if (cart.items.length === 0) {
+      drawerBody.innerHTML = '<p class="empty-cart-msg">Your cart is currently empty.</p>';
+      return;
+    }
+
+    let html = '';
+    cart.items.forEach(item => {
+      // Create a picture, title, price, and +/- buttons for every item in the cart
+      html += `
+        <div class="drawer-item">
+          <img src="${item.image}" alt="${item.title}" class="drawer-item-img">
+          <div class="drawer-item-details">
+            <a href="${item.url}" class="drawer-item-title">${item.product_title}</a>
+            <p class="drawer-item-price">$${(item.price / 100).toFixed(2)}</p>
+            <div class="drawer-qty-wrap">
+              <button type="button" class="drawer-qty-btn minus" data-key="${item.key}" data-qty="${item.quantity - 1}">-</button>
+              <input type="text" class="drawer-qty-input" value="${item.quantity}" readonly>
+              <button type="button" class="drawer-qty-btn plus" data-key="${item.key}" data-qty="${item.quantity + 1}">+</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    drawerBody.innerHTML = html;
+  }
+
+  // 4. HANDLE DRAWER ANIMATIONS
+  function openDrawer() {
+    drawer.classList.add('is-active');
+    overlay.classList.add('is-active');
+    document.body.style.overflow = 'hidden'; // Prevents background website scrolling
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('is-active');
+    overlay.classList.remove('is-active');
+    document.body.style.overflow = '';
+  }
+
+  if(closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  if(overlay) overlay.addEventListener('click', closeDrawer);
+
+  // 5. HANDLE QUANTITY UPDATES (+ / - BUTTONS)
+  if (drawerBody) {
+    drawerBody.addEventListener('click', function(e) {
+      // Check if user clicked a plus or minus button
+      if (e.target.classList.contains('drawer-qty-btn')) {
+        const key = e.target.getAttribute('data-key');
+        const newQty = e.target.getAttribute('data-qty');
+        
+        drawerBody.style.opacity = '0.4'; // Dim drawer while updating
+
+        // Tell Shopify to change the quantity
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity: newQty })
+        })
+        .then(response => response.json())
+        .then(cart => {
+          drawerBody.style.opacity = '1';
+          buildCartHTML(cart); // Instantly rebuild the drawer with new math
+        });
+      }
+    });
+  }
+});
 </script>
 
 {% schema %}
