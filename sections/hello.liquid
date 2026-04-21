@@ -1,0 +1,51 @@
+{% for block in section.blocks %}
+  <h3 
+    style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.font_color }};">
+    {{ block.settings.heading }}
+  </h3>
+{% endfor %}
+
+{% schema %}
+{
+  "name": "Shamraiz Section",
+  "settings": [],
+  
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Hello, World!"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background Color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "font_color",
+          "label": "Font Color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Shamraiz Section",
+      "blocks": [
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -94,26 +94,119 @@
         {{ product.description }}
       </div>
       
-      {% if section.settings.show_specs_tab %}
-      <div class="tab-pane" id="specification">
-        <table class="custom-spec-table">
-          <tbody>
-            <tr><td><h5>Width</h5></td><td><p>128mm</p></td></tr>
-            <tr><td><h5>Height</h5></td><td><p>508mm</p></td></tr>
-            <tr><td><h5>Depth</h5></td><td><p>85mm</p></td></tr>
-            <tr><td><h5>Weight</h5></td><td><p>52gm</p></td></tr>
-            <tr><td><h5>Quality checking</h5></td><td><p>yes</p></td></tr>
-            <tr><td><h5>Freshness Duration</h5></td><td><p>03days</p></td></tr>
-            <tr><td><h5>When packeting</h5></td><td><p>Without touch of hand</p></td></tr>
-            <tr><td><h5>Each Box contains</h5></td><td><p>60pcs</p></td></tr>
-          </tbody>
-        </table>
-      </div>
-      {% endif %}
+  {% if section.settings.show_specs_tab %}
+  <div class="tab-pane" id="specification">
+    <table class="custom-spec-table">
+      <tbody>
+
+        {% if product.metafields.custom.width != blank %}
+        <tr>
+          <td><h5>Width</h5></td>
+          <td>
+            <p>
+              {{ product.metafields.custom.width.value }} {{ product.metafields.custom.width.unit }}
+            </p>
+          </td>
+        </tr>
+        {% endif %}
+
+        {% if product.metafields.custom.height != blank %}
+        <tr>
+          <td><h5>Height</h5></td>
+          <td>
+            <p>
+              {{ product.metafields.custom.height.value }} {{ product.metafields.custom.height.unit }}
+            </p>
+          </td>
+        </tr>
+        {% endif %}
+
+        {% if product.metafields.custom.depth != blank %}
+        <tr>
+          <td><h5>Depth</h5></td>
+          <td>
+            <p>
+              {{ product.metafields.custom.depth.value }} {{ product.metafields.custom.depth.unit }}
+            </p>
+          </td>
+        </tr>
+        {% endif %}
+
+        {% if product.metafields.custom.quality_checking != blank %}
+        <tr>
+          <td><h5>Quality checking</h5></td>
+          <td><p>{{ product.metafields.custom.quality_checking }}</p></td>
+        </tr>
+        {% endif %}
+
+        {% if product.metafields.custom.when_packeting != blank %}
+        <tr>
+          <td><h5>When packeting</h5></td>
+          <td><p>{{ product.metafields.custom.when_packeting }}</p></td>
+        </tr>
+        {% endif %}
+
+        {% if product.metafields.custom.each_box_contains != blank %}
+        <tr>
+          <td><h5>Each Box contains</h5></td>
+          <td><p>{{ product.metafields.custom.each_box_contains }}</p></td>
+        </tr>
+        {% endif %}
+
+      </tbody>
+    </table>
+  </div>
+{% endif %}
       
-      {% if section.settings.show_comments_tab %}
-      <div class="tab-pane" id="comments"><p class="placeholder-text">Comments section.</p></div>
+   {% if section.settings.show_comments_tab %}
+<div class="tab-pane" id="comments">
+  <div class="comments-layout-wrap" style="display: flex; gap: 30px;">
+    
+    <div class="comments-list-section" style="flex: 1;">
+      
+      {% if product.metafields.custom.coments %}
+        {% for comment in product.metafields.custom.coments.value %}
+          <div class="single-comment" style="display: flex; gap: 15px; margin-bottom: 30px;">
+            
+           <div class="comment-avatar">
+  {% if comment.image %}
+    <img src="{{ comment.image.value | image_url: width: 100 }}" alt="{{ comment.author_name.value }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+  {% else %}
+    <div class="placeholder-avatar" style="width: 60px; height: 60px; background: #eee; border-radius: 50%;"></div>
+  {% endif %}
+</div>
+
+            <div class="comment-content">
+              <div class="comment-header" style="display: flex; justify-content: space-between;">
+                <div>
+                  <h5 style="margin: 0; font-size: 16px;">{{ comment.author_name.value }}</h5>
+                  <p style="margin: 0; font-size: 12px; color: #888;">{{ comment.date.value | date: "%dth %b, %Y" }}</p>
+                </div>
+                <button class="reply-btn" style="border: 1px solid #ddd; background: transparent; padding: 5px 15px; border-radius: 20px;">Reply</button>
+              </div>
+              <p style="margin-top: 15px; color: #666; font-size: 14px; line-height: 1.6;">{{ comment.message.value }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No comments yet. Be the first to leave one!</p>
       {% endif %}
+    </div>
+
+    <div class="comment-form-section" style="flex: 1;">
+      <h3 style="margin-bottom: 20px;">Post a comment</h3>
+      {% form 'contact' %}
+        <input type="text" name="contact[name]" placeholder="Your Full Name" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #eee;">
+        <input type="email" name="contact[email]" placeholder="Email Address" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #eee;">
+        <input type="tel" name="contact[phone]" placeholder="Phone Number" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #eee;">
+        <textarea name="contact[body]" placeholder="Message" rows="4" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #eee;"></textarea>
+        <button type="submit" style="background: #71cd14; color: white; border: none; padding: 12px 30px; cursor: pointer; float: right; font-weight: 500;">Submit Now</button>
+      {% endform %}
+    </div>
+    
+  </div>
+</div>
+{% endif %}
       
       {% if section.settings.show_reviews_tab %}
       <div class="tab-pane" id="reviews"><p class="placeholder-text">Reviews section.</p></div>
