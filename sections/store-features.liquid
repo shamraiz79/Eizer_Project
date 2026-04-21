@@ -6,9 +6,13 @@
         <div class="col-lg-3 col-md-6 feature-column" {{ block.shopify_attributes }}>
           <div class="single-feature">
             <a href="{{ block.settings.link | default: '#' }}" class="title">
-              {% if block.settings.icon_class != blank %}
+              
+              {% if block.settings.icon_image != blank %}
+                <img src="{{ block.settings.icon_image | image_url: width: 60 }}" alt="{{ block.settings.title }}" style="width: 45px; height: auto; margin-bottom: 15px;">
+              {% elsif block.settings.icon_class != blank %}
                 <i class="{{ block.settings.icon_class }}"></i>
               {% endif %}
+              
               <h3>{{ block.settings.title }}</h3>
             </a>
             <p>{{ block.settings.text }}</p>
@@ -19,6 +23,7 @@
     </div>
   </div>
 </section>
+
 {% schema %}
 {
   "name": "Store Features",
@@ -30,11 +35,17 @@
       "name": "Feature Item",
       "settings": [
         {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Upload Icon Image (Recommended)",
+          "info": "Upload a PNG or SVG icon."
+        },
+        {
           "type": "text",
           "id": "icon_class",
-          "label": "Icon Class",
+          "label": "Icon Class (Fallback)",
           "default": "flaticon-money",
-          "info": "Type the icon class here (e.g., flaticon-money, flaticon-truck, flaticon-support)"
+          "info": "Only used if no image is uploaded."
         },
         {
           "type": "text",
@@ -60,10 +71,10 @@
     {
       "name": "Store Features",
       "blocks": [
-        { "type": "feature", "settings": { "icon_class": "flaticon-money", "title": "Money back guarantee" } },
-        { "type": "feature", "settings": { "icon_class": "flaticon-truck", "title": "Free Delivery" } },
-        { "type": "feature", "settings": { "icon_class": "flaticon-support", "title": "Always support" } },
-        { "type": "feature", "settings": { "icon_class": "flaticon-blockchain", "title": "Secure payment" } }
+        { "type": "feature", "settings": { "title": "Money back guarantee" } },
+        { "type": "feature", "settings": { "title": "Free Delivery" } },
+        { "type": "feature", "settings": { "title": "Always support" } },
+        { "type": "feature", "settings": { "title": "Secure payment" } }
       ]
     }
   ]
