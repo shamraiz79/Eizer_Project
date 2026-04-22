@@ -24,48 +24,40 @@
           <div class="row w-100 mr-0">
             
             <div class="col-lg-7 pr-0 center-nav-container">
-              <ul class="nav navbar-nav center_nav">
-                
-                <li class="nav-item active">
-  <a class="nav-link" href="{{ routes.root_url }}">Home</a>
-</li>
-                
-                <li class="nav-item submenu dropdown">
-                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop</a>
-                  <ul class="dropdown-menu">
-                   <li class="nav-item">
-                       <a class="nav-link" href="{{ routes.all_products_collection_url }}">Shop Category</a>
-                        </li>
-   <li class="nav-item">
-  <a class="nav-link" href="{{ collections.all.products.first.url }}">Product Details</a>
-</li>
-                    <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
-                    <li class="nav-item"><a class="nav-link" href="cart.html">Shopping Cart</a></li>
-                  </ul>
-                </li>
-                
-                <li class="nav-item submenu dropdown">
-                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog</a>
-                  <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
-                  </ul>
-                </li>
-                
-                <li class="nav-item submenu dropdown">
-                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages</a>
-                  <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link" href="tracking.html">Tracking</a></li>
-                    <li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>
-                  </ul>
-                </li>
-                
-                <li class="nav-item">
-                  <a class="nav-link" href="contact.html">Contact</a>
-                </li>
+          <div class="col-lg-7 pr-0 center-nav-container">
+  <ul class="nav navbar-nav center_nav">
+    
+    {%- assign main_menu = section.settings.main_menu -%}
+    
+    {%- for link in linklists[main_menu].links -%}
+      
+      {%- if link.links != blank -%}
+        
+        <li class="nav-item submenu dropdown {% if link.active or link.child_active %}active{% endif %}">
+          <a href="{{ link.url }}" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {{ link.title }}
+          </a>
+          <ul class="dropdown-menu">
+            {%- for childlink in link.links -%}
+              <li class="nav-item {% if childlink.active %}active{% endif %}">
+                <a class="nav-link" href="{{ childlink.url }}">{{ childlink.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </li>
+        
+      {%- else -%}
+        
+        <li class="nav-item {% if link.active %}active{% endif %}">
+          <a class="nav-link" href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+        
+      {%- endif -%}
+      
+    {%- endfor -%}
 
-              </ul>
-            </div>
+  </ul>
+</div>
 
             <div class="col-lg-5 pr-0 right-icons-container">
               <ul class="nav navbar-nav navbar-right right_nav">
@@ -108,7 +100,13 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Store Logo"
-    }
+    },
+    {
+  "type": "link_list",
+  "id": "main_menu",
+  "label": "Main Menu",
+  "default": "main-menu"
+}
   ],
   "presets": [
     {
