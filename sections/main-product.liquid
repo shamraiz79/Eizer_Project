@@ -54,12 +54,12 @@
               <input type="number" name="quantity" id="sst" min="1" value="1" title="Quantity:" class="custom-qty-input" />
             </div>
             
-            <div class="product-action-wrap">
-          <button type="submit" name="add" id="AddToCartBtn" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
-  <span id="AddToCartText">
-    {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
-  </span>
-</button>
+             <div class="product-action-wrap">
+             <button type="submit" name="add" id="AddToCartBtn" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
+             <span id="AddToCartText">
+            {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
+             </span>
+             </button>
               <a class="icon-btn" href="#"><i class="ti-gem"></i></a>
               <a class="icon-btn" href="#"><i class="ti-heart"></i></a>
             </div>
@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
 </script>
 
 {% schema %}

@@ -26,6 +26,7 @@
         "feature_TKUQrU": {
           "type": "feature",
           "settings": {
+            "icon_image": "shopify://shop_images/c2.png",
             "icon_class": "flaticon-money",
             "title": "Money back guarantee",
             "text": "Shall open divide a one",
@@ -35,6 +36,7 @@
         "feature_EBwGcz": {
           "type": "feature",
           "settings": {
+            "icon_image": "shopify://shop_images/c1_f1d0774e-4830-4f76-9b9d-75f1dc165e8b.png",
             "icon_class": "flaticon-money",
             "title": "Money back guarantee",
             "text": "Shall open divide a one",
@@ -44,6 +46,7 @@
         "feature_Ph9zeC": {
           "type": "feature",
           "settings": {
+            "icon_image": "shopify://shop_images/c3_160c1809-e509-400c-8afe-f5c32e7a33f5.png",
             "icon_class": "flaticon-money",
             "title": "Money back guarantee",
             "text": "Shall open divide a one",
@@ -53,6 +56,7 @@
         "feature_aULDap": {
           "type": "feature",
           "settings": {
+            "icon_image": "shopify://shop_images/c2.png",
             "icon_class": "flaticon-money",
             "title": "Money back guarantee",
             "text": "Shall open divide a one",

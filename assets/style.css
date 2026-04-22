@@ -869,7 +869,7 @@ padding-right: 30px;
 
 .right-product-col {
   width: 50%; /* 2 items per row inside the right column */
-  padding: 0 15px;
+  padding: 15px 15px;
   box-sizing: border-box;
 }
 
@@ -1026,7 +1026,7 @@ padding-right: 30px;
 
 .inspired-col {
   width: 25%; /* Forces 4 items per row on desktop */
-  padding: 0 15px;
+  padding: 15px 15px;
   box-sizing: border-box;
 }
 
@@ -1976,3 +1976,65 @@ padding-right: 30px;
 .cart-drawer-subtotal { display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; color: #222; margin-bottom: 8px;}
 .cart-drawer-tax-note { font-size: 12px; color: #777; margin: 0 0 20px 0;}
 .drawer-checkout-btn { width: 100%; display: block; text-align: center; }
+
+
+/* search drawer css */
+/* =========================================
+   PROFESSIONAL SEARCH OVERLAY 
+========================================= */
+
+/* The Background Overlay */
+.search-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.98); /* Almost solid white for a clean look */
+  z-index: 99999;
+  display: flex; justify-content: center; align-items: center;
+  opacity: 0; visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+.search-overlay.is-active {
+  opacity: 1; visibility: visible;
+}
+
+/* The Content Container */
+.search-overlay-content {
+  width: 100%; max-width: 800px; padding: 0 20px;
+  text-align: center;
+  transform: translateY(30px); /* Starts slightly lower */
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.search-overlay.is-active .search-overlay-content {
+  transform: translateY(0); /* Slides up into place */
+}
+
+/* The Giant Form */
+.search-overlay-form {
+  position: relative; display: flex; align-items: center;
+  border-bottom: 2px solid #222222; padding-bottom: 10px;
+}
+.search-overlay-input {
+  width: 100%; border: none; background: transparent;
+  font-size: 40px; font-weight: 300; color: #222222;
+  outline: none; padding-right: 50px;
+}
+.search-overlay-input::placeholder { color: #cccccc; }
+
+/* Buttons & Text */
+.search-overlay-submit {
+  position: absolute; right: 0;
+  background: none; border: none;
+  font-size: 28px; color: #222222;
+  cursor: pointer; transition: 0.2s;
+}
+.search-overlay-submit:hover { color: #71cd14; }
+
+.search-close-btn {
+  position: absolute; top: 40px; right: 50px;
+  background: none; border: none;
+  font-size: 50px; color: #222222;
+  cursor: pointer; transition: 0.3s; line-height: 1;
+}
+.search-close-btn:hover { color: #71cd14; transform: rotate(90deg); }
+
+.search-hint { margin-top: 20px; font-size: 14px; color: #888888; letter-spacing: 1px;}
