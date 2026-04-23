@@ -2635,3 +2635,149 @@ textarea.custom-contact-input {
 @media (max-width: 767px) {
   .custom-form-row { flex-direction: column; gap: 20px; }
 }
+
+
+
+
+
+
+/* =========================================
+   HEADER & MOBILE DRAWER STYLING (NO BOOTSTRAP)
+========================================= */
+
+.custom-header-area {
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  position: relative;
+  z-index: 1000;
+}
+.custom-header-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.custom-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* --- Logo Styling --- */
+.custom-logo-link { text-decoration: none; }
+.custom-logo-fallback { display: flex; align-items: center; gap: 8px; }
+.custom-logo-circle {
+  background: #71cd14; border-radius: 50%; width: 35px; height: 35px;
+  display: flex; align-items: center; justify-content: center;
+}
+.custom-logo-circle span { color: #fff; font-weight: bold; font-size: 20px; font-style: italic; }
+.custom-logo-fallback h2 { margin: 0; font-weight: 800; color: #222222; font-size: 28px; letter-spacing: -1px; }
+
+/* --- Desktop Nav --- */
+.custom-desktop-nav-list {
+  list-style: none; padding: 0; margin-left: 40px; display: flex; gap: 30px; align-items: center;
+}
+.custom-nav-item { position: relative; }
+.custom-nav-link {
+  text-decoration: none; color: #222222; font-size: 14px; font-weight: 500;
+  text-transform: uppercase; transition: color 0.3s ease; padding: 10px 0; display: block;
+}
+.custom-nav-link:hover, .custom-nav-item.active .custom-nav-link { color: #71cd14; }
+.dropdown-arrow { font-size: 10px; margin-left: 3px; color: #999; }
+
+/* Desktop Dropdown Menus */
+.custom-dropdown-menu {
+  list-style: none; padding: 10px 0; margin: 0; position: absolute; top: 100%; left: 0;
+  background: #ffffff; min-width: 200px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eeeeee; border-top: 3px solid #71cd14;
+  opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 100;
+}
+.custom-nav-item.has-dropdown:hover .custom-dropdown-menu {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.custom-dropdown-link {
+  display: block; padding: 10px 20px; color: #555555; text-decoration: none;
+  font-size: 13px; transition: all 0.3s ease;
+}
+.custom-dropdown-link:hover { background: #f9f9fa; color: #71cd14; }
+
+/* --- Right Icons --- */
+.custom-right-icons-list {
+  list-style: none; padding: 0; margin: 0; display: flex; align-items: center; gap: 20px;
+}
+.custom-icon-item a { color: #222222; font-size: 18px; text-decoration: none; transition: color 0.3s ease; }
+.custom-icon-item a:hover { color: #71cd14; }
+
+/* --- Hamburger Icon --- */
+.mobile-menu-trigger {
+  background: transparent; border: none; cursor: pointer; padding: 5px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.mobile-menu-trigger .icon-bar {
+  display: block; width: 25px; height: 2px; background-color: #222222;
+}
+
+/* Hide drawer elements by default on large screens */
+.mobile-side-drawer, .mobile-menu-overlay, .mobile-hamburger { display: none; }
+
+/* --- MOBILE SPECIFIC STYLES (Under 991px) --- */
+@media (max-width: 991px) {
+  /* Hide Desktop Elements */
+  .desktop-nav-container, .desktop-only { display: none !important; }
+  
+  /* Show Hamburger */
+  .mobile-hamburger { display: block; }
+
+  /* The Dark Overlay */
+  .mobile-menu-overlay {
+    display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); z-index: 9998;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+  }
+  .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+
+  /* The Right-Side Sliding Drawer */
+  .mobile-side-drawer {
+    display: block; position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+    background: #ffffff; z-index: 9999; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    transition: right 0.4s ease; overflow-y: auto;
+  }
+  .mobile-side-drawer.active { right: 0; }
+
+  /* Drawer Internals */
+  .drawer-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px; border-bottom: 1px solid #eeeeee;
+  }
+  .drawer-header h4 { margin: 0; font-size: 18px; font-weight: 600; color: #222; }
+  .close-drawer-btn {
+    background: transparent; border: none; font-size: 28px; line-height: 1; cursor: pointer; color: #222;
+  }
+  
+  .drawer-body { padding: 20px; }
+  .mobile-nav-list { list-style: none; padding: 0; margin: 0; }
+  .mobile-nav-item { border-bottom: 1px solid #f5f5f5; }
+  .mobile-nav-item a {
+    display: block; padding: 12px 0; color: #222; text-decoration: none; font-size: 15px;
+  }
+  .mobile-link-wrapper { display: flex; justify-content: space-between; align-items: center; }
+  
+  /* Mobile Extra Links Divider */
+  .mobile-extra-links-divider { margin-top: 30px; border-top: 2px solid #eeeeee; padding-top: 15px; }
+  .custom-icon-spacing { margin-right: 8px; color: #888; }
+  
+  /* Mobile Submenu Accordion */
+  .mobile-submenu-toggle {
+    background: transparent; border: none; font-size: 24px; color: #71cd14; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  }
+  .mobile-submenu { list-style: none; padding-left: 15px; margin: 0; display: none; }
+  .mobile-submenu li a { font-size: 14px; color: #777; }
+}
+/* hide top_menu on the mobile screen */
+@media (max-width: 991px) {
+  .top_menu {
+    display: none !important;
+  }
+}
