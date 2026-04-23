@@ -2506,3 +2506,132 @@ padding-right: 30px;
   border-color: #222222;
   color: #ffffff;
 }
+/* css for custom contact page */
+/* =========================================
+   CUSTOM CONTACT PAGE
+========================================= */
+
+.custom-contact-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  max-width: 1140px; /* Prevents it from stretching too far on large screens */
+  margin: 0 auto; /* Centers the whole layout on the page */
+  padding: 0 15px; /* Gives it breathing room on smaller screens */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Left Side (Form) takes up roughly 65% */
+.custom-contact-form-col {
+  flex: 0 0 calc(65% - 25px);
+  max-width: calc(65% - 25px);
+}
+
+/* Right Side (Info) takes up remaining 35% */
+.custom-contact-info-col {
+  flex: 0 0 calc(35% - 25px);
+  max-width: calc(35% - 25px);
+  padding-top: 50px; /* Aligns the icons with the form inputs */
+}
+
+.contact-title {
+  font-size: 27px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 25px;
+}
+
+/* --- Form Styling --- */
+.custom-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.custom-form-row {
+  display: flex;
+  gap: 20px;
+}
+.custom-form-row .half-width {
+  flex: 1;
+}
+
+.custom-contact-input {
+  width: 100%;
+  box-sizing: border-box; /* Stops inputs from stretching out of their columns */
+  border: 1px solid #f0f0f0; /* Very light grey border */
+  padding: 15px 20px;
+  font-size: 14px;
+  color: #555555;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  border-radius: 3px;
+}
+.custom-contact-input:focus {
+  border-color: #71cd14; /* Green focus glow */
+}
+.custom-contact-input::placeholder {
+  color: #bbbbbb;
+  font-weight: 300;
+}
+textarea.custom-contact-input {
+  resize: vertical;
+}
+
+/* Submit Button */
+.custom-contact-btn {
+  background-color: #71cd14;
+  color: #ffffff;
+  border: none;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+.custom-contact-btn:hover {
+  background-color: #222222;
+  color: #ffffff;
+}
+
+/* --- Contact Info Sidebar --- */
+.contact-info-item {
+  display: flex;
+  margin-bottom: 30px;
+}
+.contact-icon {
+  font-size: 27px;
+  color: #888888;
+  margin-right: 20px;
+  line-height: 1;
+}
+.contact-info-item h3 {
+  font-size: 16px;
+  color: #222222;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.contact-info-item p {
+  font-size: 14px;
+  color: #999999;
+  margin: 0;
+}
+
+/* Success & Error Messages */
+.form-success-msg { color: #155724; background-color: #d4edda; padding: 15px; border-left: 4px solid #28a745; margin-bottom: 20px; font-size: 14px; }
+.form-error-msg { color: #721c24; background-color: #f8d7da; padding: 15px; border-left: 4px solid #dc3545; margin-bottom: 20px; font-size: 14px; }
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+  .custom-contact-form-col { flex: 0 0 100%; max-width: 100%; }
+  .custom-contact-info-col { flex: 0 0 100%; max-width: 100%; padding-top: 20px; }
+}
+@media (max-width: 767px) {
+  .custom-form-row { flex-direction: column; gap: 20px; }
+}

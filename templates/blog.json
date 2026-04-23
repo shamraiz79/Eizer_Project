@@ -11,7 +11,60 @@
   "sections": {
     "main": {
       "type": "main-blog",
+      "blocks": {
+        "instagram_image_yRibtx": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i6_64b659a1-836e-4e59-8734-b69526c7f3a1.jpg",
+            "link": ""
+          }
+        },
+        "instagram_image_AwhLMJ": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i5_3cefa211-aebf-4658-8c4e-1bfbb1f73d35.jpg",
+            "link": ""
+          }
+        },
+        "instagram_image_YxDHmF": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i4_5c8d1694-7091-41e5-b0a1-3c79de3d151d.jpg",
+            "link": ""
+          }
+        },
+        "instagram_image_qewYxm": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i3.jpg",
+            "link": ""
+          }
+        },
+        "instagram_image_HtNj8y": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i2_750b6e2d-891a-47dd-9463-a48d805e128b.jpg",
+            "link": ""
+          }
+        },
+        "instagram_image_N8H4Qn": {
+          "type": "instagram_image",
+          "settings": {
+            "image": "shopify://shop_images/i1_37020e6e-3a7e-4631-9148-bb9cd71102d2.jpg",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "instagram_image_yRibtx",
+        "instagram_image_AwhLMJ",
+        "instagram_image_YxDHmF",
+        "instagram_image_qewYxm",
+        "instagram_image_HtNj8y",
+        "instagram_image_N8H4Qn"
+      ],
       "settings": {
+        "recent_post_limit": 5
       }
     }
   },

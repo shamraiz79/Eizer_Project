@@ -1,0 +1,131 @@
+<section class="banner_area" style="background: #f9f9fa; padding: 60px 0; margin-bottom: 50px;">
+  <div class="banner_inner d-flex align-items-center">
+    <div class="container">
+      <div class="banner_content d-md-flex justify-content-between align-items-center">
+        <div class="mb-3 mb-md-0">
+          <h2 style="color: #222; font-size: 36px; font-weight: 700;">{{ page.title }}</h2>
+        </div>
+        <div class="page_link" style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+          <a href="{{ routes.root_url }}" style="color: #777; text-decoration: none;">Home</a> / 
+          <span style="color: #222; font-weight: 500;">{{ page.title }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section section_gap" style="margin-bottom: 80px;">
+  <div class="container">
+    
+    <div class="custom-contact-layout">
+      
+      <div class="custom-contact-form-col">
+        <h2 class="contact-title">Get in Touch</h2>
+        
+        {% form 'contact', class: 'custom-contact-form' %}
+          
+          {%- if form.posted_successfully? -%}
+            <div class="form-success-msg">Thank you! Your message has been sent successfully.</div>
+          {%- elsif form.errors -%}
+            <div class="form-error-msg">Please make sure all required fields are filled out correctly.</div>
+          {%- endif -%}
+
+          <div class="custom-form-group">
+            <textarea name="contact[body]" class="custom-contact-input" cols="30" rows="9" placeholder="Enter Message" required></textarea>
+          </div>
+          
+          <div class="custom-form-row">
+            <div class="custom-form-group half-width">
+              <input name="contact[name]" type="text" class="custom-contact-input" placeholder="Enter your name" required>
+            </div>
+            <div class="custom-form-group half-width">
+              <input name="contact[email]" type="email" class="custom-contact-input" placeholder="Enter email address" required>
+            </div>
+          </div>
+          
+          <div class="custom-form-group">
+            <input name="contact[subject]" type="text" class="custom-contact-input" placeholder="Enter Subject">
+          </div>
+          
+          <div class="custom-form-group mt-3">
+            <button type="submit" class="custom-contact-btn">SEND MESSAGE</button>
+          </div>
+          
+        {% endform %}
+      </div>
+
+      <div class="custom-contact-info-col">
+        
+        <div class="contact-info-item">
+          <span class="contact-icon"><i class="ti-home"></i></span>
+          <div class="media-body">
+            <h3>{{ section.settings.address_heading }}</h3>
+            <p>{{ section.settings.address_sub }}</p>
+          </div>
+        </div>
+        
+        <div class="contact-info-item">
+          <span class="contact-icon"><i class="ti-tablet"></i></span>
+          <div class="media-body">
+            <h3>{{ section.settings.phone_heading }}</h3>
+            <p>{{ section.settings.phone_sub }}</p>
+          </div>
+        </div>
+        
+        <div class="contact-info-item">
+          <span class="contact-icon"><i class="ti-email"></i></span>
+          <div class="media-body">
+            <h3>{{ section.settings.email_heading }}</h3>
+            <p>{{ section.settings.email_sub }}</p>
+          </div>
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact Page Layout",
+  "settings": [
+    {
+      "type": "text",
+      "id": "address_heading",
+      "label": "Address Line 1",
+      "default": "Buttonwood, California."
+    },
+    {
+      "type": "text",
+      "id": "address_sub",
+      "label": "Address Line 2",
+      "default": "Rosemead, CA 91770"
+    },
+    {
+      "type": "text",
+      "id": "phone_heading",
+      "label": "Phone Number",
+      "default": "00 (440) 9865 562"
+    },
+    {
+      "type": "text",
+      "id": "phone_sub",
+      "label": "Phone Subtext",
+      "default": "Mon to Fri 9am to 6pm"
+    },
+    {
+      "type": "text",
+      "id": "email_heading",
+      "label": "Email Address",
+      "default": "support@colorlib.com"
+    },
+    {
+      "type": "text",
+      "id": "email_sub",
+      "label": "Email Subtext",
+      "default": "Send us your query anytime!"
+    }
+  ]
+}
+{% endschema %}
