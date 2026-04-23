@@ -2389,3 +2389,120 @@ padding-right: 30px;
     left: 20px;
   }
 }
+/* for searchbar on the blog page */
+/* =========================================
+   CUSTOM SEARCH WIDGET
+========================================= */
+
+/* The wrapper that holds the input and the icon */
+.custom-search-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eeeeee;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  overflow: hidden; /* Keeps the input from spilling out */
+}
+
+/* The actual text input field */
+.custom-search-input {
+  flex-grow: 1; /* Makes the input take up the remaining space */
+  border: none;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #555555;
+  outline: none;
+  background: transparent;
+}
+.custom-search-input::placeholder {
+  color: #aaaaaa;
+}
+
+/* The small magnifying glass button inside the input */
+.custom-search-icon-btn {
+  background: transparent;
+  border: none;
+  padding: 0 15px;
+  color: #888888;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.custom-search-icon-btn:hover {
+  color: #71cd14; /* Turns green on hover */
+}
+
+/* The large Search button at the bottom */
+.custom-search-submit-btn {
+  width: 100%; /* Forces the button to be full width */
+  display: block;
+  background-color: #71cd14;
+  color: #ffffff;
+  border: 1px solid #71cd14;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.custom-search-submit-btn:hover {
+  background-color: #222222; /* Turns black on hover */
+  border-color: #222222;
+  color: #ffffff;
+}
+/* custom css for new search on the blog page */
+/* =========================================
+   CUSTOM NEWSLETTER WIDGET
+========================================= */
+
+/* The form container */
+.custom-newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Creates clean spacing between the input and the button */
+}
+
+/* The email input field */
+.custom-newsletter-input {
+  width: 100%;
+  border: 1px solid #eeeeee;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: #555555;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.3s ease;
+}
+
+/* Slight green border glow when a user clicks to type */
+.custom-newsletter-input:focus {
+  border-color: #71cd14; 
+}
+
+.custom-newsletter-input::placeholder {
+  color: #aaaaaa;
+}
+
+/* The Subscribe Button */
+.custom-newsletter-btn {
+  width: 100%; 
+  display: block;
+  background-color: #71cd14;
+  color: #ffffff;
+  border: 1px solid #71cd14;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-newsletter-btn:hover {
+  background-color: #222222; /* Turns black on hover */
+  border-color: #222222;
+  color: #ffffff;
+}
