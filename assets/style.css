@@ -536,7 +536,7 @@ html, body {
   font-weight: 600;
   text-transform: uppercase; /* Forces uppercase text like the image */
   letter-spacing: 0.5px;
-  margin: 0;
+ 
   transition: var(--transition);
 }
 

@@ -17,7 +17,7 @@
         "main_heading": "<span>Show</span> Your <br>Personal <span>Style</span>",
         "description": "Fowl saw dry which a above together place.",
         "button_label": "View Collection",
-        "button_link": ""
+        "button_link": "shopify://collections/all"
       }
     },
     "features": {
@@ -88,7 +88,7 @@
         "sub_title": "ALL MEN’S COLLECTION",
         "main_title": "50% OFF",
         "button_label": "Discover Now",
-        "button_link": "",
+        "button_link": "shopify://collections/all",
         "bottom_text": "Limited Time Offer"
       }
     },
