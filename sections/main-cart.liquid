@@ -1,0 +1,97 @@
+<section class="banner_area" style="background: #f9f9fa; padding: 60px 0; margin-bottom: 50px;">
+  <div class="banner_inner d-flex align-items-center">
+    <div class="container custom-container">
+      <div class="banner_content d-md-flex justify-content-between align-items-center">
+        <div class="mb-3 mb-md-0">
+          <h2 style="color: #222; font-size: 36px; font-weight: 700;">Cart</h2>
+          <p style="color: #777; margin-top: 5px;">Very us move be blessed multiply night</p>
+        </div>
+        <div class="page_link" style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+          <a href="{{ routes.root_url }}" style="color: #777; text-decoration: none;">Home</a> / 
+          <span style="color: #222; font-weight: 500;">Cart</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="custom-cart-area" style="margin-bottom: 80px;">
+  <div class="custom-container">
+    
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" novalidate class="custom-cart-form">
+        
+        <div class="cart-table-header hide-on-mobile">
+          <div class="col-product">Product</div>
+          <div class="col-price">Price</div>
+          <div class="col-quantity">Quantity</div>
+          <div class="col-total">Total</div>
+        </div>
+
+        <div class="cart-table-body">
+          {% for item in cart.items %}
+            <div class="cart-table-row">
+              
+              <div class="col-product">
+                <a href="{{ item.url }}" class="cart-item-image-wrap">
+                  <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}">
+                </a>
+                <div class="cart-item-details">
+                  <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
+                  {% unless item.variant.title contains 'Default' %}
+                    <p class="cart-item-variant">{{ item.variant.title }}</p>
+                  {% endunless %}
+                  <a href="{{ item.url_to_remove }}" class="cart-item-remove">Remove</a>
+                </div>
+              </div>
+
+              <div class="col-price" data-label="Price">
+                {{ item.original_price | money }}
+              </div>
+
+              <div class="col-quantity" data-label="Quantity">
+                <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0" class="custom-qty-input">
+              </div>
+
+              <div class="col-total" data-label="Total">
+                {{ item.final_line_price | money }}
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart-footer-actions">
+          <div class="cart-actions-left">
+            <button type="submit" name="update" class="custom-btn update-btn">Update Cart</button>
+          </div>
+        </div>
+
+        <div class="cart-subtotal-area">
+          <div class="subtotal-row">
+            <span class="subtotal-label">Subtotal</span>
+            <span class="subtotal-price">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="shipping-note">Shipping and taxes calculated at checkout.</p>
+          <button type="submit" name="checkout" class="custom-btn checkout-btn">Proceed to Checkout</button>
+        </div>
+
+      </form>
+    
+    {% else %}
+      <div class="empty-cart-message text-center">
+        <h2>Your cart is currently empty.</h2>
+        <p>Before proceed to checkout you must add some products to your shopping cart.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="custom-btn checkout-btn" style="display: inline-block; margin-top: 20px;">Return to Shop</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": []
+}
+{% endschema %}

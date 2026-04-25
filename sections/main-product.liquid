@@ -240,6 +240,9 @@
     });
   });
 </script>
+
+
+{% if section.settings.cart_type == 'drawer' %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const productForm = document.querySelector('.custom-product-form');
@@ -301,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 3. DYNAMICALLY GENERATE CART ITEMS & PRICING
   function buildCartHTML(cart) {
-    // Format money (converts 14999 cents to $149.99)
     drawerTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
 
     if (cart.items.length === 0) {
@@ -311,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let html = '';
     cart.items.forEach(item => {
-      // Create a picture, title, price, and +/- buttons for every item in the cart
       html += `
         <div class="drawer-item">
           <img src="${item.image}" alt="${item.title}" class="drawer-item-img">
@@ -334,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function openDrawer() {
     drawer.classList.add('is-active');
     overlay.classList.add('is-active');
-    document.body.style.overflow = 'hidden'; // Prevents background website scrolling
+    document.body.style.overflow = 'hidden'; 
   }
 
   function closeDrawer() {
@@ -349,14 +350,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // 5. HANDLE QUANTITY UPDATES (+ / - BUTTONS)
   if (drawerBody) {
     drawerBody.addEventListener('click', function(e) {
-      // Check if user clicked a plus or minus button
       if (e.target.classList.contains('drawer-qty-btn')) {
         const key = e.target.getAttribute('data-key');
         const newQty = e.target.getAttribute('data-qty');
         
-        drawerBody.style.opacity = '0.4'; // Dim drawer while updating
+        drawerBody.style.opacity = '0.4'; 
 
-        // Tell Shopify to change the quantity
         fetch('/cart/change.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -365,14 +364,14 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(cart => {
           drawerBody.style.opacity = '1';
-          buildCartHTML(cart); // Instantly rebuild the drawer with new math
+          buildCartHTML(cart); 
         });
       }
     });
   }
 });
-
 </script>
+{% endif %}
 
 {% schema %}
 {
@@ -415,6 +414,26 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_availability",
       "label": "Show Availability",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Cart Behavior"
+    },
+    {
+      "type": "select",
+      "id": "cart_type",
+      "label": "After adding to cart, open:",
+      "options": [
+        {
+          "value": "drawer",
+          "label": "Slide-out Cart Drawer"
+        },
+        {
+          "value": "page",
+          "label": "Full Cart Page"
+        }
+      ],
+      "default": "page"
     },
     {
       "type": "header",
