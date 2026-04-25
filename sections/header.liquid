@@ -44,7 +44,11 @@
       <div class="right-icons-container">
         <ul class="custom-right-icons-list">
           <li class="custom-icon-item desktop-only"><a href="#" id="SearchTrigger"><i class="ti-search"></i></a></li>
-          <li class="custom-icon-item"><a href="{{ routes.cart_url }}"><i class="ti-shopping-cart"></i></a></li>
+<li class="custom-icon-item">
+  <a href="{{ routes.cart_url }}" id="openCartDrawer">
+    <i class="ti-shopping-cart"></i>
+  </a>
+</li>
           <li class="custom-icon-item desktop-only"><a href="{{ routes.account_url }}"><i class="ti-user"></i></a></li>
           <li class="custom-icon-item desktop-only"><a href="/pages/wishlist"><i class="ti-heart"></i></a></li>
           
@@ -149,7 +153,113 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+
+// cart icon functionality
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  const openCartBtn = document.getElementById('openCartDrawer');
+  const closeCartBtn = document.getElementById('closeCartDrawer');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartBody = document.getElementById('cartDrawerBody');
+  const cartTotal = document.getElementById('cartDrawerTotal');
+
+  // Function to fetch cart data from Shopify
+  function updateCartDrawer() {
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        
+        // Update Total Price (Shopify returns price in cents, so we divide by 100)
+        cartTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
+        
+        // Clear current items
+        cartBody.innerHTML = '';
+        
+        if (cart.item_count === 0) {
+          cartBody.innerHTML = '<p class="empty-cart-message">Your cart is currently empty.</p>';
+          return;
+        }
+
+        // Loop through items and create HTML
+        cart.items.forEach(item => {
+          let itemHTML = `
+            <div class="cart-item">
+              <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+              <div class="cart-item-details">
+                <a href="${item.url}" class="cart-item-title">${item.product_title}</a>
+                ${item.variant_title ? `<p class="cart-item-variant">${item.variant_title}</p>` : ''}
+                <p class="cart-item-price">$${(item.line_price / 100).toFixed(2)}</p>
+                <p class="cart-item-variant">Qty: ${item.quantity}</p>
+              </div>
+            </div>
+          `;
+          cartBody.innerHTML += itemHTML;
+        });
+      })
+      .catch(error => console.error('Error fetching cart:', error));
+  }
+
+  // Open Drawer Event
+  if(openCartBtn) {
+    openCartBtn.addEventListener('click', function(e) {
+      e.preventDefault(); // Stops it from going to the cart page
+      cartDrawer.classList.add('active');
+      cartOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; 
+      updateCartDrawer(); // Fetches the latest items every time you open it
+    });
+  }
+
+  // Close Drawer Event
+  function closeCart() {
+    cartDrawer.classList.remove('active');
+    cartOverlay.classList.remove('active');
+    document.body.style.overflow = ''; 
+  }
+
+  if(closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+  if(cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+});
+
 </script>
+
+
+
+
+<div class="cart-drawer-overlay" id="cartOverlay"></div>
+<div class="custom-cart-drawer" id="cartDrawer">
+  
+  <div class="cart-drawer-header">
+    <h4>Your Cart</h4>
+    <button class="close-cart-btn" id="closeCartDrawer">&times;</button>
+  </div>
+  
+  <div class="cart-drawer-body" id="cartDrawerBody">
+    <div class="empty-cart-message">Loading cart...</div>
+  </div>
+  
+  <div class="cart-drawer-footer">
+    <div class="cart-subtotal">
+      <span>Subtotal:</span>
+      <span id="cartDrawerTotal">$0.00</span>
+    </div>
+    <a href="/checkout" class="custom-checkout-btn">Checkout</a>
+    <a href="{{ routes.cart_url }}" class="custom-view-cart-link">View Full Cart</a>
+  </div>
+  
+</div>
+
+
+
+
+
+
 
 {% schema %}
 {
