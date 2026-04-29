@@ -24,7 +24,9 @@
                 <div class="p_icon">
                   <a href="{{ product.url }}"><i class="ti-eye"></i></a>
                   <a href="#"><i class="ti-heart"></i></a>
-                  <a href="{{ product.url }}"><i class="ti-shopping-cart"></i></a>
+                 <a href="{{ product.url }}" class="ajax-cart-icon-trigger" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                 <i class="ti-shopping-cart"></i>
+                 </a>
                 </div>
               </div>
               <div class="product-btm">
@@ -71,6 +73,66 @@
     </div>
   </div>
 </section>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // Find all of your new cart icons
+  const cartIcons = document.querySelectorAll('.ajax-cart-icon-trigger');
+
+  cartIcons.forEach(icon => {
+    icon.addEventListener('click', function(e) {
+      
+      // 1. Stop the browser from going to the product page!
+      e.preventDefault(); 
+      
+      // 2. Get the specific product ID we added to the HTML
+      const variantId = this.getAttribute('data-variant-id');
+      if (!variantId) return;
+
+      // Make the icon slightly transparent so the user knows it's working
+      this.style.opacity = '0.5';
+      this.style.pointerEvents = 'none';
+
+      // 3. Send it to the cart (Using the exact same logic as your Product Page)
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          'items': [{
+            'id': variantId,
+            'quantity': 1
+          }]
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        
+        // Reset the icon back to normal
+        this.style.opacity = '1';
+        this.style.pointerEvents = 'auto';
+
+        // 4. Open the Drawer by triggering the header icon!
+        const headerCartIcon = document.getElementById('openCartDrawer');
+        if (headerCartIcon) {
+          headerCartIcon.click();
+        }
+        
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        this.style.opacity = '1';
+        this.style.pointerEvents = 'auto';
+      });
+    });
+  });
+});
+</script>
+
+
+
+
 {% schema %}
 {
   "name": "Featured Products",

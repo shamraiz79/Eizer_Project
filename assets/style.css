@@ -2088,61 +2088,6 @@ padding-right: 30px;
    PROFESSIONAL SEARCH OVERLAY 
 ========================================= */
 
-/* The Background Overlay */
-.search-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(255, 255, 255, 0.98); /* Almost solid white for a clean look */
-  z-index: 99999;
-  display: flex; justify-content: center; align-items: center;
-  opacity: 0; visibility: hidden;
-  transition: all 0.3s ease-in-out;
-}
-.search-overlay.is-active {
-  opacity: 1; visibility: visible;
-}
-
-/* The Content Container */
-.search-overlay-content {
-  width: 100%; max-width: 800px; padding: 0 20px;
-  text-align: center;
-  transform: translateY(30px); /* Starts slightly lower */
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.search-overlay.is-active .search-overlay-content {
-  transform: translateY(0); /* Slides up into place */
-}
-
-/* The Giant Form */
-.search-overlay-form {
-  position: relative; display: flex; align-items: center;
-  border-bottom: 2px solid #222222; padding-bottom: 10px;
-}
-.search-overlay-input {
-  width: 100%; border: none; background: transparent;
-  font-size: 40px; font-weight: 300; color: #222222;
-  outline: none; padding-right: 50px;
-}
-.search-overlay-input::placeholder { color: #cccccc; }
-
-/* Buttons & Text */
-.search-overlay-submit {
-  position: absolute; right: 0;
-  background: none; border: none;
-  font-size: 28px; color: #222222;
-  cursor: pointer; transition: 0.2s;
-}
-.search-overlay-submit:hover { color: #71cd14; }
-
-.search-close-btn {
-  position: absolute; top: 40px; right: 50px;
-  background: none; border: none;
-  font-size: 50px; color: #222222;
-  cursor: pointer; transition: 0.3s; line-height: 1;
-}
-.search-close-btn:hover { color: #71cd14; transform: rotate(90deg); }
-
-.search-hint { margin-top: 20px; font-size: 14px; color: #888888; letter-spacing: 1px;}
 
 
 /* blog page css code  */
@@ -3011,3 +2956,154 @@ textarea.custom-contact-input {
   .cart-subtotal-area { margin: 0 auto; text-align: center; }
   .subtotal-row { justify-content: center; }
 }
+
+
+/* =========================================
+   PREDICTIVE SEARCH OVERLAY (NO BOOTSTRAP)
+========================================= */
+
+.custom-search-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(11, 12, 27, 0.95); /* Deep dark navy background */
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.custom-search-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.close-search-btn {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 40px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.close-search-btn:hover { color: #71cd14; }
+
+.search-overlay-inner {
+  width: 100%;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 10px;
+}
+
+#searchInput {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  outline: none;
+}
+#searchInput::placeholder { color: #888888; }
+
+.search-submit-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+}
+.search-submit-btn:hover { color: #71cd14; }
+
+/* Predictive Results Styling */
+.predictive-search-results {
+  background: #ffffff;
+  margin-top: 5px;
+  border-radius: 0 0 4px 4px;
+  max-height: 60vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.predictive-group-title {
+  padding: 15px 20px 5px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.predictive-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #222;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.3s;
+}
+.predictive-item:hover { background: #f9f9fa; }
+
+.predictive-item-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 3px;
+  margin-right: 15px;
+}
+
+.predictive-item-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+}
+.predictive-item-price {
+  font-size: 13px;
+  color: #71cd14;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* css for add to cart product from the home page  */
+/* Quick Add Grid Icons */
+.quick-add-icon-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.quick-add-icon-btn:hover {
+  color: #71cd14; /* Your theme green */
+}
+
+/* Fades the icon slightly while loading */
+.quick-add-icon-btn.is-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.quick-add-icon-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+

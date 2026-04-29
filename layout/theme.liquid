@@ -77,58 +77,7 @@
 </div>
 
 {% comment %} search drawer {% endcomment %}
- <div class="search-overlay" id="SearchOverlay">
-  <button class="search-close-btn" id="SearchCloseBtn">&times;</button>
-  
-  <div class="search-overlay-content">
-    <form action="{{ routes.search_url }}" method="get" class="search-overlay-form">
-      <input type="hidden" name="type" value="product"> 
-      
-      <input type="text" name="q" placeholder="What are you looking for?" class="search-overlay-input" id="SearchInput" autocomplete="off">
-      <button type="submit" class="search-overlay-submit"><i class="ti-search"></i></button>
-    </form>
-    <p class="search-hint">Hit enter to search or ESC to close</p>
-  </div>
-</div>
+
 </body>
 </html>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const searchTrigger = document.getElementById('SearchTrigger');
-    const searchOverlay = document.getElementById('SearchOverlay');
-    const searchCloseBtn = document.getElementById('SearchCloseBtn');
-    const searchInput = document.getElementById('SearchInput');
-
-    // 1. Open the Overlay
-    if(searchTrigger && searchOverlay) {
-      searchTrigger.addEventListener('click', function(e) {
-        e.preventDefault(); // Stop standard link behavior
-        searchOverlay.classList.add('is-active');
-        document.body.style.overflow = 'hidden'; // Stop background scrolling
-        
-        // Auto-focus the input box after the CSS animation finishes
-        setTimeout(() => {
-          searchInput.focus();
-        }, 300);
-      });
-    }
-
-    // 2. Close the Overlay
-    function closeSearch() {
-      searchOverlay.classList.remove('is-active');
-      document.body.style.overflow = ''; 
-    }
-
-    if(searchCloseBtn) {
-      searchCloseBtn.addEventListener('click', closeSearch);
-    }
-
-    // 3. Close on hitting the "ESC" key on a keyboard
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && searchOverlay.classList.contains('is-active')) {
-        closeSearch();
-      }
-    });
-  });
-</script>

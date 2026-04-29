@@ -227,6 +227,121 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // 1. Elements
+  const searchTrigger = document.getElementById('SearchTrigger'); // Desktop icon
+  const searchTriggerMobile = document.getElementById('SearchTriggerMobile'); // Mobile icon
+  const searchOverlay = document.getElementById('searchOverlay');
+  const closeSearchBtn = document.getElementById('closeSearchBtn');
+  const searchInput = document.getElementById('searchInput');
+  const resultsContainer = document.getElementById('predictiveSearchResults');
+
+  // 2. Open / Close Overlay
+  function openSearch(e) {
+    e.preventDefault();
+    searchOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => searchInput.focus(), 100); // Auto-focus the input box
+  }
+
+  function closeSearch() {
+    searchOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+    searchInput.value = ''; // Clear input
+    resultsContainer.innerHTML = ''; // Clear results
+  }
+
+  if (searchTrigger) searchTrigger.addEventListener('click', openSearch);
+  if (searchTriggerMobile) searchTriggerMobile.addEventListener('click', openSearch);
+  if (closeSearchBtn) closeSearchBtn.addEventListener('click', closeSearch);
+
+  // Close if clicking the dark background
+  if (searchOverlay) {
+    searchOverlay.addEventListener('click', function(e) {
+      if (e.target === searchOverlay) closeSearch();
+    });
+  }
+
+  // 3. Predictive Search Logic
+  let debounceTimer;
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
+
+    // If search is empty, clear results
+    if (query.length === 0) {
+      resultsContainer.innerHTML = '';
+      return;
+    }
+
+    // Wait 300ms after user stops typing to make the API call
+    debounceTimer = setTimeout(() => {
+      
+      // Call Shopify's Predictive Search API
+      fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product,collection,page&resources[limit]=4`)
+        .then(response => response.json())
+        .then(data => {
+          const products = data.resources.results.products;
+          const collections = data.resources.results.collections;
+          
+          let html = '';
+
+          // Build Products HTML
+          if (products && products.length > 0) {
+            html += `<div class="predictive-group-title">Products</div>`;
+            products.forEach(product => {
+              html += `
+                <a href="${product.url}" class="predictive-item">
+                  ${product.image ? `<img src="${product.image}" class="predictive-item-img" alt="${product.title}">` : ''}
+                  <div>
+                    <p class="predictive-item-title">${product.title}</p>
+                    <p class="predictive-item-price">${product.price}</p>
+                  </div>
+                </a>
+              `;
+            });
+          }
+
+          // Build Collections HTML
+          if (collections && collections.length > 0) {
+            html += `<div class="predictive-group-title">Collections</div>`;
+            collections.forEach(collection => {
+              html += `
+                <a href="${collection.url}" class="predictive-item">
+                  <div style="padding-left: ${collection.image ? '65px' : '0'}">
+                    <p class="predictive-item-title">${collection.title}</p>
+                  </div>
+                </a>
+              `;
+            });
+          }
+
+          // Show a "See all results" link at the bottom
+          if (html !== '') {
+            html += `
+              <a href="/search?q=${encodeURIComponent(query)}&type=product,page,article" class="predictive-item" style="justify-content: center; color: #71cd14; font-weight: 600;">
+                See all results for "${query}" &rarr;
+              </a>
+            `;
+            resultsContainer.innerHTML = html;
+          } else {
+            // No results found
+            resultsContainer.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">No results found for "${query}"</div>`;
+          }
+        })
+        .catch(error => console.error('Error fetching search:', error));
+        
+    }, 300); // 300ms delay
+  });
+
+});
+
 </script>
 
 
@@ -253,6 +368,33 @@ document.addEventListener('DOMContentLoaded', function() {
     <a href="{{ routes.cart_url }}" class="custom-view-cart-link">View Full Cart</a>
   </div>
   
+</div>
+
+
+{% comment %} predictive search api {% endcomment %}
+ <div class="custom-search-overlay" id="searchOverlay">
+  <button class="close-search-btn" id="closeSearchBtn">&times;</button>
+  
+  <div class="search-overlay-inner">
+    <form action="{{ routes.search_url }}" method="get" class="custom-search-form" role="search">
+      <input type="hidden" name="type" value="product,page,article">
+      
+      <div class="search-input-wrapper">
+        <input 
+          type="search" 
+          name="q" 
+          id="searchInput" 
+          placeholder="Search for products, collections..." 
+          autocomplete="off"
+        >
+        <button type="submit" class="search-submit-btn">
+          <i class="ti-search"></i>
+        </button>
+      </div>
+    </form>
+
+    <div id="predictiveSearchResults" class="predictive-search-results"></div>
+  </div>
 </div>
 
 
