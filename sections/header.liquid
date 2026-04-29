@@ -157,16 +157,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // cart icon functionality
 
-
-
+// ==========================================
+// UPDATED CART ICON & DRAWER FUNCTIONALITY
+// ==========================================
 document.addEventListener('DOMContentLoaded', function() {
   
   const openCartBtn = document.getElementById('openCartDrawer');
-  const closeCartBtn = document.getElementById('closeCartDrawer');
-  const cartDrawer = document.getElementById('cartDrawer');
-  const cartOverlay = document.getElementById('cartOverlay');
-  const cartBody = document.getElementById('cartDrawerBody');
-  const cartTotal = document.getElementById('cartDrawerTotal');
+  const closeCartBtn = document.getElementById('closeCartDrawer'); // Note: Make sure your HTML button ID matches this or update this to 'CartDrawerClose'
+  const cartDrawer = document.getElementById('cartDrawer'); // Note: Your HTML had 'CartDrawer' capitalized, check IDs!
+  const cartOverlay = document.getElementById('cartOverlay'); // Note: Your HTML had 'CartDrawerOverlay'
+  const cartBody = document.getElementById('cartDrawerBody'); // Note: Your HTML had 'CartDrawerBody'
+  const cartTotal = document.getElementById('cartDrawerTotal'); // Note: Your HTML had 'CartDrawerTotal'
 
   // Function to fetch cart data from Shopify
   function updateCartDrawer() {
@@ -174,27 +175,35 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(cart => {
         
-        // Update Total Price (Shopify returns price in cents, so we divide by 100)
-        cartTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
+        // Update Total Price
+        if (cartTotal) cartTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
         
         // Clear current items
-        cartBody.innerHTML = '';
+        if (cartBody) cartBody.innerHTML = '';
         
         if (cart.item_count === 0) {
-          cartBody.innerHTML = '<p class="empty-cart-message">Your cart is currently empty.</p>';
+          cartBody.innerHTML = '<p class="empty-cart-message" style="text-align:center; margin-top:40px; color:#888;">Your cart is currently empty.</p>';
           return;
         }
 
-        // Loop through items and create HTML
+        // Loop through items and create HTML with Quantity & Remove buttons
         cart.items.forEach(item => {
           let itemHTML = `
             <div class="cart-item">
               <img src="${item.image}" alt="${item.title}" class="cart-item-img">
               <div class="cart-item-details">
                 <a href="${item.url}" class="cart-item-title">${item.product_title}</a>
-                ${item.variant_title ? `<p class="cart-item-variant">${item.variant_title}</p>` : ''}
-                <p class="cart-item-price">$${(item.line_price / 100).toFixed(2)}</p>
-                <p class="cart-item-variant">Qty: ${item.quantity}</p>
+                
+                
+                ${item.variant_title ? `<p class="cart-item-variant" style="font-size:12px; color:#888; margin: 0 0 5px 0;">${item.variant_title}</p>` : ''}
+                
+                <p class="cart-item-price" style="margin: 0 0 10px 0; font-weight: 600;">$${(item.line_price / 100).toFixed(2)}</p>
+                
+                <div class="cart-item-qty" style="display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 3px;">
+                  <button type="button" class="qty-btn minus" data-key="${item.key}" data-qty="${item.quantity - 1}" style="width: 30px; height: 30px; border: none; background: #f9f9fa; cursor: pointer;">-</button>
+                  <input type="text" value="${item.quantity}" readonly style="width: 35px; height: 30px; border: none; text-align: center; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
+                  <button type="button" class="qty-btn plus" data-key="${item.key}" data-qty="${item.quantity + 1}" style="width: 30px; height: 30px; border: none; background: #f9f9fa; cursor: pointer;">+</button>
+                </div>
               </div>
             </div>
           `;
@@ -204,27 +213,66 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error fetching cart:', error));
   }
 
+  // Listen for clicks on + / - / Remove buttons inside the drawer body
+  if (cartBody) {
+    cartBody.addEventListener('click', function(e) {
+      let key, newQty;
+
+      // If clicked Remove 'X'
+      if (e.target.classList.contains('cart-item-remove')) {
+        key = e.target.getAttribute('data-key');
+        newQty = 0; // Sending 0 deletes the item
+      } 
+      // If clicked Plus or Minus
+      else if (e.target.classList.contains('qty-btn')) {
+        key = e.target.getAttribute('data-key');
+        newQty = e.target.getAttribute('data-qty');
+      }
+
+      // Update Shopify if a button was clicked
+      if (key !== undefined && newQty !== undefined) {
+        cartBody.style.opacity = '0.5'; // Dim drawer while loading
+        cartBody.style.pointerEvents = 'none';
+
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity: newQty })
+        })
+        .then(response => response.json())
+        .then(cart => {
+          cartBody.style.opacity = '1';
+          cartBody.style.pointerEvents = 'auto';
+          updateCartDrawer(); // Rebuild the drawer instantly
+        })
+        .catch(error => console.error('Error updating cart:', error));
+      }
+    });
+  }
+
   // Open Drawer Event
   if(openCartBtn) {
     openCartBtn.addEventListener('click', function(e) {
-      e.preventDefault(); // Stops it from going to the cart page
-      cartDrawer.classList.add('active');
-      cartOverlay.classList.add('active');
+      e.preventDefault(); 
+      if(cartDrawer) cartDrawer.classList.add('active');
+      if(cartOverlay) cartOverlay.classList.add('active');
       document.body.style.overflow = 'hidden'; 
-      updateCartDrawer(); // Fetches the latest items every time you open it
+      updateCartDrawer(); 
     });
   }
 
   // Close Drawer Event
   function closeCart() {
-    cartDrawer.classList.remove('active');
-    cartOverlay.classList.remove('active');
+    if(cartDrawer) cartDrawer.classList.remove('active');
+    if(cartOverlay) cartOverlay.classList.remove('active');
     document.body.style.overflow = ''; 
   }
 
   if(closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
   if(cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
+  // Make updateCartDrawer available globally so product pages can trigger it
+  window.updateCartDrawer = updateCartDrawer;
 });
 
 

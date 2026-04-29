@@ -1079,7 +1079,7 @@ padding-right: 30px;
   margin: 0;
 }
 
-/* Flexbox Grid */
+/* Flexbox Gridss for the blog cards */
 .blog-row {
   display: flex;
   flex-wrap: wrap;

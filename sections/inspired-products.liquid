@@ -24,7 +24,9 @@
                 <div class="p_icon">
                   <a href="{{ product.url }}"><i class="ti-eye"></i></a>
                   <a href="#"><i class="ti-heart"></i></a>
-                  <a href="{{ product.url }}"><i class="ti-shopping-cart"></i></a>
+                 <a href="{{ product.url }}" class="ajax-cart-icon-trigger" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                    <i class="ti-shopping-cart"></i>
+                  </a>
                 </div>
               </div>
               <div class="product-btm">
