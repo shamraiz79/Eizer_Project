@@ -11,10 +11,28 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "settings": {
+        "banner_title": "Product Details",
+        "banner_subtitle": "Very us move be blessed multiply night",
+        "banner_bg_color": "#f9f9fa",
+        "show_category": true,
+        "show_availability": true,
+        "cart_type": "page",
+        "show_specs_tab": true,
+        "show_comments_tab": true,
+        "show_reviews_tab": true
+      }
+    },
+    "product_recommendations_JTnNdt": {
+      "type": "product-recommendations",
+      "name": "Product Recommendations",
+      "settings": {
+        "heading": "You May Also Like"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "product_recommendations_JTnNdt"
   ]
 }
