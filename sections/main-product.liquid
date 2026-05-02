@@ -28,37 +28,62 @@
           </div>
         </div>
       </div>
+      
       <div class="product-details-col">
         <div class="s_product_text">
           <h3>{{ product.title }}</h3>
-          <h2>{{ product.price | money }}</h2>
+          
+          <!-- Added ID to price so JS can update it -->
+          <h2 id="ProductPrice">{{ product.selected_or_first_available_variant.price | money }}</h2>
           
           <ul class="product-meta-list">
             {% if section.settings.show_category %}
               <li><a href="#"><span>Category</span> : <span class="text-green">{{ product.type | default: 'Household' }}</span></a></li>
             {% endif %}
             {% if section.settings.show_availability %}
-              <li><a href="#"><span>Availability</span> : {% if product.available %}In Stock{% else %}Out of Stock{% endif %}</a></li>
-                
+              <li><a href="#"><span>Availability</span> : <span id="ProductAvailability">{% if product.selected_or_first_available_variant.available %}In Stock{% else %}Out of Stock{% endif %}</span></a></li>
             {% endif %}
           </ul>
           
           <p class="product-short-desc">{{ product.description | strip_html | truncatewords: 40 }}</p>
           
           {% form 'product', product, class: 'custom-product-form' %}
-            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
             
-            <div class="product-qty-wrap">
-              <label for="qty">Quantity:</label>
+            <!-- Hidden input that JS will update -->
+            <input type="hidden" name="id" id="ProductVariantId" value="{{ product.selected_or_first_available_variant.id }}">
+            
+            <!-- ===== NEW VARIANT SELECTORS ===== -->
+            {% unless product.has_only_default_variant %}
+              <div class="product-variant-selectors" style="margin: 20px 0; display: flex; gap: 15px; flex-wrap: wrap;">
+                {% for option in product.options_with_values %}
+                  <div class="selector-wrapper" style="flex: 1; min-width: 120px;">
+                    <label for="SingleOptionSelector-{{ forloop.index0 }}" style="display: block; font-size: 14px; font-weight: 500; color: #222; margin-bottom: 5px;">
+                      {{ option.name }}
+                    </label>
+                    <select class="single-option-selector" data-index="option{{ forloop.index }}" id="SingleOptionSelector-{{ forloop.index0 }}" style="width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 4px; background: #fff; outline: none; cursor: pointer;">
+                      {% for value in option.values %}
+                        <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endunless %}
+            <!-- ================================== -->
+
+            <div class="product-qty-wrap" style="margin-top: 10px;">
+              <label for="sst">Quantity:</label>
               <input type="number" name="quantity" id="sst" min="1" value="1" title="Quantity:" class="custom-qty-input" />
             </div>
             
-             <div class="product-action-wrap">
-             <button type="submit" name="add" id="AddToCartBtn" class="main-btn {% unless product.available %}disabled{% endunless %}" {% unless product.available %}disabled{% endunless %}>
-             <span id="AddToCartText">
-            {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
-             </span>
-             </button>
+            <div class="product-action-wrap">
+              <button type="submit" name="add" id="AddToCartBtn" class="main-btn {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                <span id="AddToCartText">
+                  {% if product.selected_or_first_available_variant.available %}Add to Cart{% else %}Sold Out{% endif %}
+                </span>
+              </button>
               <a class="icon-btn" href="#"><i class="ti-gem"></i></a>
               <a class="icon-btn" href="#"><i class="ti-heart"></i></a>
             </div>
@@ -68,7 +93,88 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
+
+<!-- Store the product data for JavaScript -->
+<script type="application/json" id="ProductJson-{{ section.id }}">
+  {{ product.variants | json }}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Grab the elements
+  var productVariants = JSON.parse(document.getElementById('ProductJson-{{ section.id }}').innerHTML);
+  var selectors = document.querySelectorAll('.single-option-selector');
+  var variantInput = document.getElementById('ProductVariantId');
+  var priceElement = document.getElementById('ProductPrice');
+  var addToCartBtn = document.getElementById('AddToCartBtn');
+  var addToCartText = document.getElementById('AddToCartText');
+  var availabilityText = document.getElementById('ProductAvailability');
+  
+  // NEW: Grab the Main Image element
+  var mainImage = document.getElementById('MainProductImage');
+
+  // Basic money formatter 
+  function formatMoney(cents) {
+    var amount = (cents / 100).toFixed(2);
+    // You can change 'Rs.' below to match your exact currency symbol formatting
+    return 'Rs.' + amount; 
+  }
+
+  // Listen for changes on any dropdown
+  selectors.forEach(function(selector) {
+    selector.addEventListener('change', function() {
+      
+      // 1. Get the currently selected values from all dropdowns
+      var selectedOptions = [];
+      selectors.forEach(function(sel) {
+        selectedOptions.push(sel.value);
+      });
+
+      // 2. Find the exact variant that matches these selected options
+      var matchedVariant = productVariants.find(function(variant) {
+        var match1 = selectedOptions[0] ? variant.option1 === selectedOptions[0] : true;
+        var match2 = selectedOptions[1] ? variant.option2 === selectedOptions[1] : true;
+        var match3 = selectedOptions[2] ? variant.option3 === selectedOptions[2] : true;
+        return match1 && match2 && match3;
+      });
+
+      // 3. Update the page based on the matched variant
+      if (matchedVariant) {
+        // Update the hidden input that goes to the cart
+        variantInput.value = matchedVariant.id;
+        
+        // Update the price
+        priceElement.innerHTML = formatMoney(matchedVariant.price);
+
+        // NEW: Update the Image if the variant has one assigned
+        if (matchedVariant.featured_image && mainImage) {
+          mainImage.src = matchedVariant.featured_image.src;
+        }
+
+        // Update Button & Availability text
+        if (matchedVariant.available) {
+          addToCartBtn.classList.remove('disabled');
+          addToCartBtn.disabled = false;
+          addToCartText.innerHTML = 'Add to Cart';
+          if(availabilityText) availabilityText.innerHTML = 'In Stock';
+        } else {
+          addToCartBtn.classList.add('disabled');
+          addToCartBtn.disabled = true;
+          addToCartText.innerHTML = 'Sold Out';
+          if(availabilityText) availabilityText.innerHTML = 'Out of Stock';
+        }
+      } else {
+        // Fallback if that specific combination doesn't exist
+        addToCartBtn.classList.add('disabled');
+        addToCartBtn.disabled = true;
+        addToCartText.innerHTML = 'Unavailable';
+        if(availabilityText) availabilityText.innerHTML = 'Unavailable';
+      }
+    });
+  });
+});
+</script>
 
 <section class="product-tabs-area">
   <div class="custom-container">

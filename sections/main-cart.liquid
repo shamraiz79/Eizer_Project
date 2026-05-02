@@ -38,9 +38,27 @@
                 </a>
                 <div class="cart-item-details">
                   <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
-                  {% unless item.variant.title contains 'Default' %}
-                    <p class="cart-item-variant">{{ item.variant.title }}</p>
-                  {% endunless %}
+                  
+                  <!-- ===== NEW VARIANT SELECTOR LOGIC ===== -->
+                  {% if item.product.has_only_default_variant == false %}
+                    <div class="cart-variant-changer" style="margin: 8px 0;">
+                      <select class="cart-item-variant-select" data-key="{{ item.key }}" data-quantity="{{ item.quantity }}" style="padding: 5px; border-radius: 4px; border: 1px solid #ddd; background: #f9f9fa;">
+                        {% for variant in item.product.variants %}
+                          <option value="{{ variant.id }}" 
+                            {% if variant.id == item.variant_id %}selected{% endif %} 
+                            {% unless variant.available %}disabled{% endunless %}>
+                            {{ variant.title }} {% unless variant.available %}(Out of Stock){% endunless %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% else %}
+                    {% unless item.variant.title contains 'Default' %}
+                      <p class="cart-item-variant">{{ item.variant.title }}</p>
+                    {% endunless %}
+                  {% endif %}
+                  <!-- ====================================== -->
+
                   <a href="{{ item.url_to_remove }}" class="cart-item-remove">Remove</a>
                 </div>
               </div>
@@ -88,6 +106,81 @@
 
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // 1. Wrap the logic in a function so we can call it repeatedly
+  function attachVariantSelectors() {
+    const variantSelects = document.querySelectorAll('.cart-item-variant-select');
+    
+    variantSelects.forEach(select => {
+      select.addEventListener('change', function() {
+        const newVariantId = this.value;
+        const lineItemKey = this.getAttribute('data-key');
+        const quantity = this.getAttribute('data-quantity');
+        
+        // Visual feedback (fade out the whole cart area slightly so the user knows it's thinking)
+        const cartArea = document.querySelector('.custom-cart-area');
+        if(cartArea) {
+          cartArea.style.opacity = '0.5';
+          cartArea.style.pointerEvents = 'none';
+        }
+
+        // 2. Add the newly selected variant to the cart
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: newVariantId, quantity: parseInt(quantity) })
+        })
+        .then(response => response.json())
+        .then(() => {
+          // 3. Remove the old variant using its unique cart key
+          return fetch(window.Shopify.routes.root + 'cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: lineItemKey, quantity: 0 })
+          });
+        })
+        .then(() => {
+          // 4. Silently fetch the updated cart page HTML in the background
+          return fetch(window.location.pathname); 
+        })
+        .then(response => response.text())
+        .then(html => {
+          // 5. Parse the raw text into actual HTML
+          const parser = new DOMParser();
+          const newDocument = parser.parseFromString(html, 'text/html');
+          
+          // 6. Grab the fresh cart data and replace the old cart data
+          const newCartArea = newDocument.querySelector('.custom-cart-area');
+          const currentCartArea = document.querySelector('.custom-cart-area');
+          
+          if (newCartArea && currentCartArea) {
+            currentCartArea.innerHTML = newCartArea.innerHTML;
+            currentCartArea.style.opacity = '1';
+            currentCartArea.style.pointerEvents = 'auto';
+          }
+
+          // 7. Re-attach the event listeners to the newly created dropdown menus!
+          attachVariantSelectors();
+        })
+        .catch(error => {
+          console.error('Error swapping cart variants:', error);
+          if(cartArea) {
+            cartArea.style.opacity = '1';
+            cartArea.style.pointerEvents = 'auto';
+          }
+        });
+      });
+    });
+  }
+
+  // Initialize the first time the page loads
+  attachVariantSelectors();
+
+});
+</script>
 
 {% schema %}
 {
