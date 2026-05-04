@@ -23,7 +23,14 @@
           
           <div class="thumbnail-container">
             {% for media in product.media %}
-              <img class="product-thumbnail {% if forloop.first %}active{% endif %}" src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" data-main-src="{{ media | image_url: width: 800 }}" onclick="changeMainImage(this)" />
+              <!-- DYNAMIC COLOR TAG ADDED HERE -->
+              <img class="product-thumbnail {% if forloop.first %}active{% endif %}" 
+                   src="{{ media | image_url: width: 150 }}" 
+                   alt="{{ media.alt | escape }}" 
+                   data-main-src="{{ media | image_url: width: 800 }}" 
+                   data-color="{{ media.alt | downcase | escape }}" 
+                   onclick="changeMainImage(this)" 
+                   style="display: inline-block;" />
             {% endfor %}
           </div>
         </div>
@@ -33,7 +40,6 @@
         <div class="s_product_text">
           <h3>{{ product.title }}</h3>
           
-          <!-- Added ID to price so JS can update it -->
           <h2 id="ProductPrice">{{ product.selected_or_first_available_variant.price | money }}</h2>
           
           <ul class="product-meta-list">
@@ -49,10 +55,8 @@
           
           {% form 'product', product, class: 'custom-product-form' %}
             
-            <!-- Hidden input that JS will update -->
             <input type="hidden" name="id" id="ProductVariantId" value="{{ product.selected_or_first_available_variant.id }}">
             
-            <!-- ===== NEW VARIANT SELECTORS ===== -->
             {% unless product.has_only_default_variant %}
               <div class="product-variant-selectors" style="margin: 20px 0; display: flex; gap: 15px; flex-wrap: wrap;">
                 {% for option in product.options_with_values %}
@@ -71,7 +75,6 @@
                 {% endfor %}
               </div>
             {% endunless %}
-            <!-- ================================== -->
 
             <div class="product-qty-wrap" style="margin-top: 10px;">
               <label for="sst">Quantity:</label>
@@ -95,43 +98,50 @@
   </div>
 </div> 
 
-<!-- Store the product data for JavaScript -->
 <script type="application/json" id="ProductJson-{{ section.id }}">
   {{ product.variants | json }}
 </script>
 
+<!-- OPTION FINDER DATA -->
+<script type="application/json" id="ProductOptionsJson-{{ section.id }}">
+  {{ product.options | json }}
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Grab the elements
+  
   var productVariants = JSON.parse(document.getElementById('ProductJson-{{ section.id }}').innerHTML);
+  var productOptions = JSON.parse(document.getElementById('ProductOptionsJson-{{ section.id }}').innerHTML);
+  
   var selectors = document.querySelectorAll('.single-option-selector');
   var variantInput = document.getElementById('ProductVariantId');
   var priceElement = document.getElementById('ProductPrice');
   var addToCartBtn = document.getElementById('AddToCartBtn');
   var addToCartText = document.getElementById('AddToCartText');
   var availabilityText = document.getElementById('ProductAvailability');
-  
-  // NEW: Grab the Main Image element
   var mainImage = document.getElementById('MainProductImage');
+  
+  // SELECT ALL THUMBNAILS
+  var thumbnails = document.querySelectorAll('.product-thumbnail');
 
-  // Basic money formatter 
+  // Find out if the product has a "Color" option
+  var colorOptionIndex = productOptions.findIndex(function(opt) {
+    return opt.toLowerCase() === 'color' || opt.toLowerCase() === 'colour';
+  });
+
   function formatMoney(cents) {
     var amount = (cents / 100).toFixed(2);
-    // You can change 'Rs.' below to match your exact currency symbol formatting
     return 'Rs.' + amount; 
   }
 
-  // Listen for changes on any dropdown
   selectors.forEach(function(selector) {
     selector.addEventListener('change', function() {
       
-      // 1. Get the currently selected values from all dropdowns
       var selectedOptions = [];
       selectors.forEach(function(sel) {
         selectedOptions.push(sel.value);
       });
 
-      // 2. Find the exact variant that matches these selected options
       var matchedVariant = productVariants.find(function(variant) {
         var match1 = selectedOptions[0] ? variant.option1 === selectedOptions[0] : true;
         var match2 = selectedOptions[1] ? variant.option2 === selectedOptions[1] : true;
@@ -139,20 +149,36 @@ document.addEventListener('DOMContentLoaded', function() {
         return match1 && match2 && match3;
       });
 
-      // 3. Update the page based on the matched variant
       if (matchedVariant) {
-        // Update the hidden input that goes to the cart
         variantInput.value = matchedVariant.id;
-        
-        // Update the price
         priceElement.innerHTML = formatMoney(matchedVariant.price);
 
-        // NEW: Update the Image if the variant has one assigned
         if (matchedVariant.featured_image && mainImage) {
           mainImage.src = matchedVariant.featured_image.src;
         }
 
-        // Update Button & Availability text
+        // ==========================================
+        // THE IMAGE FILTERING LOGIC
+        // ==========================================
+        if (colorOptionIndex !== -1) {
+          // Find the exact color name the user just clicked (e.g., "blue")
+          var activeColor = matchedVariant['option' + (colorOptionIndex + 1)].toLowerCase();
+          
+          // Loop through all 9 of your thumbnails
+          thumbnails.forEach(function(thumb) {
+            // Read the color we saved in the data-color tag
+            var thumbColor = thumb.getAttribute('data-color');
+            
+            // If the thumbnail color matches the active dropdown color, show it. Otherwise, hide it!
+            if (!thumbColor || thumbColor === activeColor) {
+              thumb.style.display = 'inline-block';
+            } else {
+              thumb.style.display = 'none';
+            }
+          });
+        }
+        // ==========================================
+
         if (matchedVariant.available) {
           addToCartBtn.classList.remove('disabled');
           addToCartBtn.disabled = false;
@@ -165,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
           if(availabilityText) availabilityText.innerHTML = 'Out of Stock';
         }
       } else {
-        // Fallback if that specific combination doesn't exist
         addToCartBtn.classList.add('disabled');
         addToCartBtn.disabled = true;
         addToCartText.innerHTML = 'Unavailable';
@@ -175,6 +200,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
+{% comment %} test table for meta objects {% endcomment %}
+ 
+
+
+
 
 <section class="product-tabs-area">
   <div class="custom-container">
