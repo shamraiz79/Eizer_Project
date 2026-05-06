@@ -1,3 +1,4 @@
+
 <section class="custom-banner-area" style="background-color: {{ section.settings.banner_bg_color }};">
   <div class="custom-container">
     <div class="banner-content-wrap">
@@ -202,8 +203,88 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% comment %} test table for meta objects {% endcomment %}
- 
+ <h2 class="comparison-heading">Rē Mexico Program Comparison Extra task in Notion</h2>
+{% assign rows = product.metafields.custom.comparison_table.value %}
 
+{% if rows != blank %}
+
+<table class="comparison-table">
+
+  <thead>
+    <tr>
+      <th></th>
+      <th>5 Days</th>
+      <th>10 Days</th>
+      <th>21 Days</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% assign sorted_rows = rows | sort: 'priority' %}
+
+    {% for row in sorted_rows %}
+
+      {%- comment -%} SECTION ROW (optional) {%- endcomment -%}
+      {% if row.section == true %}
+        <tr class="section-row">
+          <td colspan="4">{{ row.label }}</td>
+        </tr>
+
+      {% else %}
+
+      <tr>
+        <td class="feature">
+          {% if row.icon %}
+            <img src="{{ row.icon | image_url: width: 20 }}" alt="">
+          {% endif %}
+          {{ row.label }}
+        </td>
+
+        <!-- PLAN 1 -->
+        <td>
+          {% if row.plan_1_value == "✔" %}
+            <span class="check">✔</span>
+          {% elsif row.plan_1_value == "X" %}
+            <span class="cross">✖</span>
+          {% else %}
+            {{ row.plan_1_value }}
+          {% endif %}
+        </td>
+
+        <!-- PLAN 2 -->
+        <td>
+          {% if row.plan_2_value == "✔" %}
+            <span class="check">✔</span>
+          {% elsif row.plan_2_value == "X" %}
+            <span class="cross">✖</span>
+          {% else %}
+            {{ row.plan_2_value }}
+          {% endif %}
+        </td>
+
+        <!-- PLAN 3 -->
+        <td>
+          {% if row.plan_3_value == "✔" %}
+            <span class="check">✔</span>
+          {% elsif row.plan_3_value == "X" %}
+            <span class="cross">✖</span>
+          {% else %}
+            {{ row.plan_3_value }}
+          {% endif %}
+        </td>
+
+      </tr>
+
+      {% endif %}
+
+    {% endfor %}
+
+  </tbody>
+
+</table>
+
+{% endif %}
 
 
 

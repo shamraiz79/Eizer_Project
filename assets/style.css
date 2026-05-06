@@ -3104,6 +3104,88 @@ textarea.custom-contact-input {
   opacity: 0.4;
   cursor: not-allowed;
 }
+/* css for the table complex object table */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
 
+/* Header */
+.comparison-table thead th {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 14px;
+  background: #f4f4f4;
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+}
+
+/* First column (feature names) */
+.comparison-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  width: 35%;
+}
+
+/* All cells */
+.comparison-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Section headings (like grey rows in your image) */
+.comparison-table .section-row td {
+  background: #efefef;
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+/* Checkmark style */
+.check {
+  color: #2ecc71;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Cross style */
+.cross {
+  color: #bbb;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Optional icon */
+.comparison-table .feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comparison-table .feature img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* Hover effect */
+.comparison-table tbody tr:hover {
+  background: #fafafa;
+}
+/* css code for heading  */
+.comparison-heading {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
 
 
