@@ -110,24 +110,49 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   
-  // 1. Wrap the logic in a function so we can call it repeatedly
-  function attachVariantSelectors() {
+  // Helper function: Fetches the newest cart data and updates the screen
+  function fetchAndReplaceCart() {
+    return fetch(window.location.pathname)
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const newDocument = parser.parseFromString(html, 'text/html');
+        
+        const newCartArea = newDocument.querySelector('.custom-cart-area');
+        const currentCartArea = document.querySelector('.custom-cart-area');
+        
+        if (newCartArea && currentCartArea) {
+          currentCartArea.innerHTML = newCartArea.innerHTML;
+          currentCartArea.style.opacity = '1';
+          currentCartArea.style.pointerEvents = 'auto';
+        }
+
+        // CRITICAL: Re-attach the listeners to the newly injected HTML
+        attachCartListeners();
+      });
+  }
+
+  // Main function: Attaches event listeners to buttons and dropdowns
+  function attachCartListeners() {
+    const cartArea = document.querySelector('.custom-cart-area');
     const variantSelects = document.querySelectorAll('.cart-item-variant-select');
-    
+    const removeLinks = document.querySelectorAll('.cart-item-remove');
+
+    // ---------------------------------------------------------
+    // 1. VARIANT SELECTOR LOGIC
+    // ---------------------------------------------------------
     variantSelects.forEach(select => {
       select.addEventListener('change', function() {
         const newVariantId = this.value;
         const lineItemKey = this.getAttribute('data-key');
         const quantity = this.getAttribute('data-quantity');
         
-        // Visual feedback (fade out the whole cart area slightly so the user knows it's thinking)
-        const cartArea = document.querySelector('.custom-cart-area');
         if(cartArea) {
           cartArea.style.opacity = '0.5';
           cartArea.style.pointerEvents = 'none';
         }
 
-        // 2. Add the newly selected variant to the cart
+        // Add new variant
         fetch(window.Shopify.routes.root + 'cart/add.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -135,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(() => {
-          // 3. Remove the old variant using its unique cart key
+          // Remove old variant
           return fetch(window.Shopify.routes.root + 'cart/change.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -143,27 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         })
         .then(() => {
-          // 4. Silently fetch the updated cart page HTML in the background
-          return fetch(window.location.pathname); 
-        })
-        .then(response => response.text())
-        .then(html => {
-          // 5. Parse the raw text into actual HTML
-          const parser = new DOMParser();
-          const newDocument = parser.parseFromString(html, 'text/html');
-          
-          // 6. Grab the fresh cart data and replace the old cart data
-          const newCartArea = newDocument.querySelector('.custom-cart-area');
-          const currentCartArea = document.querySelector('.custom-cart-area');
-          
-          if (newCartArea && currentCartArea) {
-            currentCartArea.innerHTML = newCartArea.innerHTML;
-            currentCartArea.style.opacity = '1';
-            currentCartArea.style.pointerEvents = 'auto';
-          }
-
-          // 7. Re-attach the event listeners to the newly created dropdown menus!
-          attachVariantSelectors();
+          // Update the DOM
+          return fetchAndReplaceCart(); 
         })
         .catch(error => {
           console.error('Error swapping cart variants:', error);
@@ -174,10 +180,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       });
     });
+
+    // ---------------------------------------------------------
+    // 2. REMOVE BUTTON LOGIC (NEW)
+    // ---------------------------------------------------------
+    removeLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault(); // Stops the page from doing a hard reload!
+        
+        if(cartArea) {
+          cartArea.style.opacity = '0.5';
+          cartArea.style.pointerEvents = 'none';
+        }
+
+        // Grab the removal URL directly from the href attribute
+        const removeUrl = this.getAttribute('href');
+
+        // Tell Shopify to remove the item in the background
+        fetch(removeUrl)
+        .then(() => {
+          // Update the DOM
+          return fetchAndReplaceCart();
+        })
+        .catch(error => {
+          console.error('Error removing item from cart:', error);
+          if(cartArea) {
+            cartArea.style.opacity = '1';
+            cartArea.style.pointerEvents = 'auto';
+          }
+        });
+      });
+    });
   }
 
   // Initialize the first time the page loads
-  attachVariantSelectors();
+  attachCartListeners();
 
 });
 </script>
