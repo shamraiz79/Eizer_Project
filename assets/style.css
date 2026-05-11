@@ -580,7 +580,7 @@ html, body {
    FEATURED PRODUCTS AREA
 ========================================= */
 .feature_product_area {
-  padding: 80px 0;
+  padding: 40px 0;
   background: #ffffff;
 }
 
@@ -619,7 +619,6 @@ padding-right: 30px;
   width: 33.333%; /* 3 columns on desktop */
   padding: 0 15px;
   box-sizing: border-box;
-  margin-bottom: 40px;
 }
 
 /* =========================================

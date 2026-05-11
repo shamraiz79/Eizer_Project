@@ -12,104 +12,255 @@
       </div>
     </div>
 
-    <div class="row">
-      {%- assign collection = collections[section.settings.feature_collection] -%}
-      
-      {% if collection != blank and collection.products_count > 0 %}
-        {% for product in collection.products limit: section.settings.product_limit %}
-          <div class="col-lg-4 col-md-6 feature-col">
-            <div class="single-product">
-              <div class="product-img">
-                <img class="img-fluid w-100" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" />
-                <div class="p_icon">
-                  <a href="#" class="quick-view-trigger" data-id="{{ product.id }}"><i class="ti-eye"></i></a>
-                  <a href="#"><i class="ti-heart"></i></a>
-                  <a href="#" class="ajax-cart-icon-trigger" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-                    <i class="ti-shopping-cart"></i>
-                  </a>
-                </div>
-              </div>
-              <div class="product-btm">
-                <a href="{{ product.url }}" class="d-block">
-                  <h4>{{ product.title }}</h4>
+  <div style="padding: 0 15px;"> <div class="featured-product-slider">
+    {%- assign collection = collections[section.settings.feature_collection] -%}
+    
+    {% if collection != blank and collection.products_count > 0 %}
+      {% for product in collection.products limit: section.settings.product_limit %}
+        
+        <div class="feature-col slick-slide-gap">
+          <div class="single-product">
+            <div class="product-img">
+              <img class="img-fluid w-100" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" />
+              <div class="p_icon">
+                <a href="#" class="quick-view-trigger" data-id="{{ product.id }}"><i class="ti-eye"></i></a>
+                <a href="#"><i class="ti-heart"></i></a>
+                <a href="#" class="ajax-cart-icon-trigger" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+                  <i class="ti-shopping-cart"></i>
                 </a>
-                <div class="mt-3">
-                  <span class="mr-4">{{ product.price | money }}</span>
-                  {% if product.compare_at_price > product.price %}
-                    <del>{{ product.compare_at_price | money }}</del>
-                  {% endif %}
-                </div>
+              </div>
+            </div>
+            <div class="product-btm">
+              <a href="{{ product.url }}" class="d-block">
+                <h4>{{ product.title }}</h4>
+              </a>
+              <div class="mt-3">
+                <span class="mr-4">{{ product.price | money }}</span>
+                {% if product.compare_at_price > product.price %}
+                  <del>{{ product.compare_at_price | money }}</del>
+                {% endif %}
               </div>
             </div>
           </div>
+        </div>
 
-          <div id="QuickViewModal-{{ product.id }}" class="custom-quick-view-modal" data-product-id="{{ product.id }}">
-            <div class="modal-content-wrap">
-              <span class="close-modal" data-id="{{ product.id }}">&times;</span>
+      {% endfor %}
+    {% else %}
+      <p style="width: 100%; text-align: center;">No products found in this collection.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="quick-view-modals-wrapper">
+  {% if collection != blank and collection.products_count > 0 %}
+    {% for product in collection.products limit: section.settings.product_limit %}
+      <div id="QuickViewModal-{{ product.id }}" class="custom-quick-view-modal" data-product-id="{{ product.id }}">
+        <div class="modal-content-wrap">
+          <span class="close-modal" data-id="{{ product.id }}">&times;</span>
+          
+          <div class="modal-grid">
+            <div class="modal-gallery">
+              <img id="MainProductImage-{{ product.id }}" src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.title | escape }}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;" />
               
-              <div class="modal-grid">
-                <div class="modal-gallery">
-                  <img id="MainProductImage-{{ product.id }}" src="{{ product.featured_media | image_url: width: 800 }}" alt="{{ product.title | escape }}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;" />
-                  
-                  <div class="thumbnail-container" style="display: flex; gap: 5px; flex-wrap: wrap;">
-                    {% for media in product.media %}
-                      <img class="modal-thumbnail-{{ product.id }} {% if forloop.first %}active{% endif %}" 
-                           src="{{ media | image_url: width: 150 }}" 
-                           alt="{{ media.alt | escape }}" 
-                           data-main-src="{{ media | image_url: width: 800 }}" 
-                           data-color="{{ media.alt | downcase | escape }}" 
-                           style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 1px solid #ddd; border-radius: 4px;" />
+              <div class="thumbnail-container">
+                {% for media in product.media %}
+                  <img class="modal-thumbnail-{{ product.id }} {% if forloop.first %}active{% endif %}" 
+                       src="{{ media | image_url: width: 150 }}" 
+                       alt="{{ media.alt | escape }}" 
+                       data-main-src="{{ media | image_url: width: 800 }}" 
+                       data-color="{{ media.alt | downcase | escape }}" />
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="modal-details">
+              <h3>{{ product.title }}</h3>
+              <h2 id="ProductPrice-{{ product.id }}" style="color: #82b53f; margin: 10px 0;">{{ product.selected_or_first_available_variant.price | money }}</h2>
+              
+              <p style="font-size: 14px; color: #777;">{{ product.description | strip_html | truncatewords: 25 }}</p>
+              
+              <div class="modal-form-wrap" style="margin-top: 20px;">
+                <input type="hidden" id="ProductVariantId-{{ product.id }}" value="{{ product.selected_or_first_available_variant.id }}">
+                
+                {% unless product.has_only_default_variant %}
+                  <div style="margin-bottom: 15px;">
+                    {% for option in product.options_with_values %}
+                      <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px;">{{ option.name }}</label>
+                        <select class="single-option-selector-{{ product.id }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                          {% for value in option.values %}
+                            <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>{{ value }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
                     {% endfor %}
                   </div>
-                </div>
+                {% endunless %}
 
-                <div class="modal-details">
-                  <h3>{{ product.title }}</h3>
-                  <h2 id="ProductPrice-{{ product.id }}" style="color: #82b53f; margin: 10px 0;">{{ product.selected_or_first_available_variant.price | money }}</h2>
-                  
-                  <p style="font-size: 14px; color: #777;">{{ product.description | strip_html | truncatewords: 25 }}</p>
-                  
-                  <div class="modal-form-wrap" style="margin-top: 20px;">
-                    <input type="hidden" id="ProductVariantId-{{ product.id }}" value="{{ product.selected_or_first_available_variant.id }}">
-                    
-                    {% unless product.has_only_default_variant %}
-                      <div style="margin-bottom: 15px;">
-                        {% for option in product.options_with_values %}
-                          <div style="margin-bottom: 10px;">
-                            <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px;">{{ option.name }}</label>
-                            <select class="single-option-selector-{{ product.id }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                              {% for value in option.values %}
-                                <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>{{ value }}</option>
-                              {% endfor %}
-                            </select>
-                          </div>
-                        {% endfor %}
-                      </div>
-                    {% endunless %}
-
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                      <input type="number" id="Quantity-{{ product.id }}" value="1" min="1" style="width: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                      <button type="button" class="modal-add-to-cart main-btn" data-id="{{ product.id }}" style="flex: 1; padding: 10px; background: #82b53f; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-                        <span id="AddToCartText-{{ product.id }}">{% if product.selected_or_first_available_variant.available %}Add to Cart{% else %}Sold Out{% endif %}</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <script type="application/json" id="ProductJson-{{ product.id }}">{{ product.variants | json }}</script>
-                  <script type="application/json" id="ProductOptionsJson-{{ product.id }}">{{ product.options | json }}</script>
-
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <input type="number" id="Quantity-{{ product.id }}" value="1" min="1" style="width: 60px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                  <button type="button" class="modal-add-to-cart main-btn" data-id="{{ product.id }}" style="flex: 1; padding: 10px; background: #82b53f; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+                    <span id="AddToCartText-{{ product.id }}">{% if product.selected_or_first_available_variant.available %}Add to Cart{% else %}Sold Out{% endif %}</span>
+                  </button>
                 </div>
               </div>
+
+              <script type="application/json" id="ProductJson-{{ product.id }}">{{ product.variants | json }}</script>
+              <script type="application/json" id="ProductOptionsJson-{{ product.id }}">{{ product.options | json }}</script>
+
             </div>
           </div>
-          {% endfor %}
-      {% else %}
-        <p>No products found in this collection.</p>
-      {% endif %}
-    </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
   </div>
 </section>
 
+
+<style>
+
+
+/* FIX FOR SLIDER GAPS & HOVER GLITCH */
+ 
+  .featured-product-slider .slick-list {
+    margin: 0 -15px; 
+    padding-bottom: 20px; 
+  }
+  .featured-product-slider .single-product {
+    margin-bottom: 0; 
+  }
+  /* SLIDER STYLING (Arrows and Dots) */
+  .featured-product-slider {
+    margin-bottom: 50px !important;
+    padding: 0 40px !important; /* This creates 40px of space on the left and right */
+  }
+  .slick-dots {
+    bottom: -40px !important;
+  }
+  .slick-dots li button:before {
+    font-size: 14px !important;
+    color: #82b53f !important; 
+    opacity: 0.3 !important;   
+  }
+  .slick-dots li.slick-active button:before {
+    opacity: 1 !important;     
+  }
+ /* 3. Premium Shopify Arrow Styling */
+  .slick-prev, 
+  .slick-next {
+    top: 35% !important; /* Moves arrows UP to center them perfectly with the images */
+    transform: translateY(-50%) !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: transparent !important; /* Removes the squished green circle background */
+    border: none !important;
+  }
+
+  /* Moves the arrows slightly outward to breathe */
+  .slick-prev { left: -5px !important; z-index: 10; }
+  .slick-next { right: -5px !important; z-index: 10; }
+
+  /* The actual Arrow Icon */
+  .slick-prev:before, 
+  .slick-next:before {
+    color: #82b53f !important; /* Your brand green */
+    font-size: 40px !important; /* Makes them larger and more clickable */
+    opacity: 0.7 !important; /* Slightly faded normally */
+    transition: all 0.3s ease !important; /* Smooth animation for hover */
+  }
+
+  /* Hover Effect: Turns solid dark grey when the customer hovers over them */
+  .slick-prev:hover:before, 
+  .slick-next:hover:before {
+    opacity: 1 !important;
+    color: #333 !important; 
+  }
+
+  /* PREVENT CONFLICT WITH THEME CSS */
+  .custom-quick-view-modal [class*="modal-thumbnail-"] {
+    position: static !important; 
+    display: inline-block !important; 
+    float: none !important; 
+    transform: none !important;
+    margin: 0 !important;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  /* MODAL CONTAINER */
+  .custom-quick-view-modal {
+    display: none;
+    position: fixed;
+    z-index: 99999; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-content-wrap {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .modal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+  }
+  .modal-gallery, .modal-details {
+    flex: 1 1 calc(50% - 15px);
+    min-width: 300px;
+  }
+
+  /* GALLERY IMAGES */
+  .modal-gallery img[id^="MainProductImage-"] {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: block;
+    position: relative;
+  }
+  .modal-gallery .thumbnail-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    justify-content: flex-end; /* Pushes thumbnails to the right */
+  }
+  img[class*="modal-thumbnail-"].active {
+    border-color: #82b53f !important;
+    border-width: 2px;
+  }
+</style>
 <style>
   /* 1. Prevent Conflict with Theme CSS (CRITICAL FIX) */
   .custom-quick-view-modal [class*="modal-thumbnail-"] {
@@ -211,6 +362,198 @@
     border-width: 2px;
   }
 </style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // 1. INITIALIZE SLICK SLIDER
+  function initSlickSlider() {
+    if (window.jQuery && window.jQuery.fn.slick) {
+      var $slider = window.jQuery('.featured-product-slider');
+      if (!$slider.hasClass('slick-initialized')) {
+        $slider.slick({
+          slidesToShow: 3,         
+          slidesToScroll: 1,       
+          autoplay: true,          
+              
+          arrows: true,            
+          dots: true,              
+          responsive: [
+            { breakpoint: 992, settings: { slidesToShow: 2 } },
+            { breakpoint: 768, settings: { slidesToShow: 1, arrows: false } }
+          ]
+        });
+      }
+    } else {
+      setTimeout(initSlickSlider, 100);
+    }
+  }
+  initSlickSlider();
+
+  // 2. EVENT DELEGATION FOR BUTTONS
+  document.addEventListener('click', function(e) {
+    
+    // Quick View Trigger
+    const quickViewBtn = e.target.closest('.quick-view-trigger');
+    if (quickViewBtn) {
+      e.preventDefault();
+      const pid = quickViewBtn.getAttribute('data-id');
+      const modal = document.getElementById('QuickViewModal-' + pid);
+      if(modal) modal.style.display = 'flex';
+    }
+
+    // Close Modal Button
+    const closeBtn = e.target.closest('.close-modal');
+    if (closeBtn) {
+      const pid = closeBtn.getAttribute('data-id');
+      const modal = document.getElementById('QuickViewModal-' + pid);
+      if(modal) modal.style.display = 'none';
+    }
+
+    // Close on Outside Click
+    if (e.target.classList.contains('custom-quick-view-modal')) {
+      e.target.style.display = 'none';
+    }
+
+    // Ajax Cart Trigger
+    const cartBtn = e.target.closest('.ajax-cart-icon-trigger');
+    if (cartBtn) {
+      e.preventDefault();
+      const variantId = cartBtn.getAttribute('data-variant-id');
+      if (!variantId) return;
+
+      cartBtn.style.opacity = '0.5';
+      cartBtn.style.pointerEvents = 'none';
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 'items': [{ 'id': variantId, 'quantity': 1 }] })
+      })
+      .then(response => response.json())
+      .then(data => {
+        cartBtn.style.opacity = '1';
+        cartBtn.style.pointerEvents = 'auto';
+        const headerCartIcon = document.getElementById('openCartDrawer');
+        if (headerCartIcon) headerCartIcon.click();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        cartBtn.style.opacity = '1';
+        cartBtn.style.pointerEvents = 'auto';
+      });
+    }
+  });
+
+  // 3. VARIANT & IMAGE FILTERING LOGIC 
+  const modals = document.querySelectorAll('.custom-quick-view-modal');
+  
+  modals.forEach(modal => {
+    const pid = modal.getAttribute('data-product-id');
+    const jsonEl = document.getElementById('ProductJson-' + pid);
+    if(!jsonEl) return; 
+
+    const productVariants = JSON.parse(jsonEl.innerHTML);
+    const productOptions = JSON.parse(document.getElementById('ProductOptionsJson-' + pid).innerHTML);
+    
+    const selectors = modal.querySelectorAll('.single-option-selector-' + pid);
+    const variantInput = document.getElementById('ProductVariantId-' + pid);
+    const priceElement = document.getElementById('ProductPrice-' + pid);
+    const addToCartBtn = modal.querySelector('.modal-add-to-cart');
+    const addToCartText = document.getElementById('AddToCartText-' + pid);
+    const mainImage = document.getElementById('MainProductImage-' + pid);
+    const thumbnails = modal.querySelectorAll('.modal-thumbnail-' + pid);
+
+    // Thumbnail Click Logic
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        mainImage.src = this.getAttribute('data-main-src');
+        thumbnails.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Add to Cart inside Modal
+    addToCartBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const qty = document.getElementById('Quantity-' + pid).value;
+      const vid = variantInput.value;
+      
+      addToCartBtn.style.opacity = '0.5';
+      
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 'items': [{ 'id': vid, 'quantity': parseInt(qty) }] })
+      })
+      .then(res => res.json())
+      .then(() => {
+        addToCartBtn.style.opacity = '1';
+        modal.style.display = 'none'; 
+        const headerCartIcon = document.getElementById('openCartDrawer');
+        if (headerCartIcon) headerCartIcon.click();
+      });
+    });
+
+    // Variant Change Logic
+    let colorOptionIndex = productOptions.findIndex(opt => opt.toLowerCase() === 'color' || opt.toLowerCase() === 'colour');
+
+    function formatMoney(cents) {
+      return 'Rs.' + (cents / 100).toFixed(2); 
+    }
+
+    selectors.forEach(selector => {
+      selector.addEventListener('change', function() {
+        let selectedOptions = Array.from(selectors).map(s => s.value);
+
+        let matchedVariant = productVariants.find(v => {
+          return (selectedOptions[0] ? v.option1 === selectedOptions[0] : true) &&
+                 (selectedOptions[1] ? v.option2 === selectedOptions[1] : true) &&
+                 (selectedOptions[2] ? v.option3 === selectedOptions[2] : true);
+        });
+
+        if (matchedVariant) {
+          variantInput.value = matchedVariant.id;
+          priceElement.innerHTML = formatMoney(matchedVariant.price);
+
+          if (colorOptionIndex !== -1) {
+            let activeColor = matchedVariant['option' + (colorOptionIndex + 1)].toLowerCase();
+            
+            thumbnails.forEach(thumb => {
+              let thumbColor = thumb.getAttribute('data-color');
+              if (!thumbColor || thumbColor === activeColor) {
+                thumb.style.display = 'inline-block';
+              } else {
+                thumb.style.display = 'none';
+              }
+            });
+
+            let firstVisible = Array.from(thumbnails).find(t => t.style.display !== 'none');
+            if (firstVisible && mainImage) {
+              mainImage.src = firstVisible.getAttribute('data-main-src');
+              thumbnails.forEach(t => t.classList.remove('active'));
+              firstVisible.classList.add('active');
+            }
+          } else if (matchedVariant.featured_image && mainImage) {
+             mainImage.src = matchedVariant.featured_image.src;
+          }
+
+          if (matchedVariant.available) {
+            addToCartBtn.classList.remove('disabled');
+            addToCartBtn.disabled = false;
+            addToCartText.innerHTML = 'Add to Cart';
+          } else {
+            addToCartBtn.classList.add('disabled');
+            addToCartBtn.disabled = true;
+            addToCartText.innerHTML = 'Sold Out';
+          }
+        }
+      });
+    });
+  });
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
