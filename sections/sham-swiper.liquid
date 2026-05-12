@@ -1,0 +1,198 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<div class="sham-swiper-container" id="sham-swiper-{{ section.id }}">
+  <div class="swiper shamSwiper">
+    <div class="swiper-wrapper">
+      
+      {% for block in section.blocks %}
+        <div class="swiper-slide" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 1920 }}" alt="{{ block.settings.title }}" class="sham-slide-bg">
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'sham-slide-bg placeholder-svg' }}
+          {% endif %}
+
+          <div class="sham-slide-content">
+            {% if block.settings.title != blank %}
+              <h2>{{ block.settings.title }}</h2>
+            {% endif %}
+            {% if block.settings.subtitle != blank %}
+              <p>{{ block.settings.subtitle }}</p>
+            {% endif %}
+            {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+              <a href="{{ block.settings.button_link }}" class="sham-btn">{{ block.settings.button_text }}</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+    
+    <div class="swiper-button-next sham-next"></div>
+    <div class="swiper-button-prev sham-prev"></div>
+    
+    <div class="swiper-pagination sham-pagination"></div>
+  </div>
+</div>
+
+<style>
+  .sham-swiper-container {
+    width: 100%;
+    position: relative;
+  }
+  .shamSwiper {
+    width: 100%;
+    height: 60vh; /* Adjust height as needed (e.g., 60% of screen height) */
+    min-height: 400px;
+  }
+  .shamSwiper .swiper-slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  /* Background Image Styling */
+  .sham-slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  .placeholder-svg {
+    background-color: #f4f4f4;
+  }
+  /* Dark Overlay so text is readable */
+  .shamSwiper .swiper-slide::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* 40% black overlay */
+    z-index: 2;
+  }
+  /* Text Content Styling */
+  .sham-slide-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #ffffff;
+    max-width: 800px;
+    padding: 0 20px;
+  }
+  .sham-slide-content h2 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #ffffff;
+  }
+  .sham-slide-content p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: #ffffff;
+  }
+  .sham-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #82b53f; /* Your brand green */
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+  .sham-btn:hover {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  /* Customizing Swiper Controls */
+  .sham-next, .sham-prev {
+    color: #ffffff !important;
+  }
+  .sham-pagination .swiper-pagination-bullet {
+    background: #ffffff;
+    opacity: 0.5;
+  }
+  .sham-pagination .swiper-pagination-bullet-active {
+    background: #82b53f; /* Your brand green */
+    opacity: 1;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swiper = new Swiper(".shamSwiper", {
+      loop: true, // Infinite looping
+      autoplay: {
+        delay: 4000, // Slides every 4 seconds
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: ".sham-next",
+        prevEl: ".sham-prev",
+      },
+      pagination: {
+        el: ".sham-pagination",
+        clickable: true,
+      },
+      effect: "fade", // Gives it a nice fading effect (optional, change to "slide" if you prefer sliding)
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Sham Swiper Slider",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Welcome to Our Store"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Subheading",
+          "default": "Discover the best products at unbeatable prices."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sham Swiper Slider",
+      "category": "Image",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}
