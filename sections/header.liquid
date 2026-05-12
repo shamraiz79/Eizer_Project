@@ -160,25 +160,31 @@ document.addEventListener('DOMContentLoaded', function() {
 // ==========================================
 // UPDATED CART ICON & DRAWER FUNCTIONALITY
 // ==========================================
+// ==========================================
+// UPDATED CART ICON & DRAWER FUNCTIONALITY (WITH VARIANT DROPDOWNS)
+// ==========================================
+// ==========================================
+// SUPER-FAST CART ICON & DRAWER FUNCTIONALITY 
+// ==========================================
 document.addEventListener('DOMContentLoaded', function() {
   
   const openCartBtn = document.getElementById('openCartDrawer');
-  const closeCartBtn = document.getElementById('closeCartDrawer'); // Note: Make sure your HTML button ID matches this or update this to 'CartDrawerClose'
-  const cartDrawer = document.getElementById('cartDrawer'); // Note: Your HTML had 'CartDrawer' capitalized, check IDs!
-  const cartOverlay = document.getElementById('cartOverlay'); // Note: Your HTML had 'CartDrawerOverlay'
-  const cartBody = document.getElementById('cartDrawerBody'); // Note: Your HTML had 'CartDrawerBody'
-  const cartTotal = document.getElementById('cartDrawerTotal'); // Note: Your HTML had 'CartDrawerTotal'
+  const closeCartBtn = document.getElementById('closeCartDrawer'); 
+  const cartDrawer = document.getElementById('cartDrawer'); 
+  const cartOverlay = document.getElementById('cartOverlay'); 
+  const cartBody = document.getElementById('cartDrawerBody'); 
+  const cartTotal = document.getElementById('cartDrawerTotal'); 
 
-  // Function to fetch cart data from Shopify
+  // --- THE SPEED FIX: Our Product Memory Cache ---
+  // This remembers product variants so we don't have to download them twice!
+  const productCache = {}; 
+
   function updateCartDrawer() {
     fetch('/cart.js')
       .then(response => response.json())
-      .then(cart => {
+      .then(async cart => { 
         
-        // Update Total Price
         if (cartTotal) cartTotal.innerHTML = '$' + (cart.total_price / 100).toFixed(2);
-        
-        // Clear current items
         if (cartBody) cartBody.innerHTML = '';
         
         if (cart.item_count === 0) {
@@ -186,18 +192,58 @@ document.addEventListener('DOMContentLoaded', function() {
           return;
         }
 
-        // Loop through items and create HTML with Quantity & Remove buttons
-        cart.items.forEach(item => {
-          let itemHTML = `
-            <div class="cart-item">
+        // --- SPEED FIX: Fetch any missing products ALL AT ONCE ---
+        const handlesToFetch = cart.items
+          .filter(item => item.variant_title && item.variant_title !== 'Default Title' && !productCache[item.handle])
+          .map(item => item.handle);
+
+        const uniqueHandles = [...new Set(handlesToFetch)];
+
+        // Ask Shopify for all missing products simultaneously
+        await Promise.all(uniqueHandles.map(handle => 
+          fetch('/products/' + handle + '.js')
+            .then(res => res.json())
+            .then(data => {
+              productCache[handle] = data; // Save to memory!
+            })
+            .catch(err => console.error('Failed to load product:', err))
+        ));
+
+        let htmlString = '';
+
+        // Now build the HTML instantly from memory
+        for (const item of cart.items) {
+          let variantHTML = '';
+
+          if (item.variant_title && item.variant_title !== 'Default Title' && item.variant_title !== '') {
+            const productData = productCache[item.handle];
+
+            if (productData && productData.variants) {
+              variantHTML = `<select class="drawer-variant-select" data-key="${item.key}" data-quantity="${item.quantity}" style="margin: 5px 0 10px; padding: 6px; width: 100%; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; background: #f9f9fa; cursor: pointer; color: #555;">`;
+              
+              productData.variants.forEach(v => {
+                const isSelected = v.id === item.variant_id ? 'selected' : '';
+                const isAvailable = v.available ? '' : 'disabled';
+                const stockText = v.available ? '' : '(Out of Stock)';
+                variantHTML += `<option value="${v.id}" ${isSelected} ${isAvailable}>${v.title} ${stockText}</option>`;
+              });
+              
+              variantHTML += `</select>`;
+            } else {
+               variantHTML = `<p class="cart-item-variant" style="font-size:12px; color:#888; margin: 0 0 5px 0;">${item.variant_title}</p>`;
+            }
+          }
+
+          htmlString += `
+            <div class="cart-item" style="position: relative;">
+              <a href="${item.url_to_remove}" class="cart-item-remove" data-key="${item.key}" style="position: absolute; top: 0; right: 0; font-size: 18px; color: #999; text-decoration: none; cursor: pointer;">&times;</a>
               <img src="${item.image}" alt="${item.title}" class="cart-item-img">
               <div class="cart-item-details">
-                <a href="${item.url}" class="cart-item-title">${item.product_title}</a>
+                <a href="${item.url}" class="cart-item-title" style="display: block; padding-right: 15px;">${item.product_title}</a>
                 
+                ${variantHTML}
                 
-                ${item.variant_title ? `<p class="cart-item-variant" style="font-size:12px; color:#888; margin: 0 0 5px 0;">${item.variant_title}</p>` : ''}
-                
-                <p class="cart-item-price" style="margin: 0 0 10px 0; font-weight: 600;">$${(item.line_price / 100).toFixed(2)}</p>
+                <p class="cart-item-price" style="margin: 0 0 10px 0; font-weight: 600; color: #82b53f;">$${(item.line_price / 100).toFixed(2)}</p>
                 
                 <div class="cart-item-qty" style="display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 3px;">
                   <button type="button" class="qty-btn minus" data-key="${item.key}" data-qty="${item.quantity - 1}" style="width: 30px; height: 30px; border: none; background: #f9f9fa; cursor: pointer;">-</button>
@@ -207,31 +253,60 @@ document.addEventListener('DOMContentLoaded', function() {
               </div>
             </div>
           `;
-          cartBody.innerHTML += itemHTML;
-        });
+        }
+
+        cartBody.innerHTML = htmlString;
       })
       .catch(error => console.error('Error fetching cart:', error));
   }
 
-  // Listen for clicks on + / - / Remove buttons inside the drawer body
   if (cartBody) {
+    // 1. Dropdown Change Event
+    cartBody.addEventListener('change', function(e) {
+      if (e.target.classList.contains('drawer-variant-select')) {
+        const key = e.target.getAttribute('data-key');
+        const newVariantId = e.target.value;
+        const qty = e.target.getAttribute('data-quantity');
+
+        cartBody.style.opacity = '0.5';
+        cartBody.style.pointerEvents = 'none';
+
+        // Swap the items
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: newVariantId, quantity: parseInt(qty) })
+        })
+        .then(() => fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity: 0 })
+        }))
+        .then(() => {
+          cartBody.style.opacity = '1';
+          cartBody.style.pointerEvents = 'auto';
+          updateCartDrawer(); 
+        })
+        .catch(error => console.error('Error swapping variants:', error));
+      }
+    });
+
+    // 2. Click Events (Remove, Plus, Minus)
     cartBody.addEventListener('click', function(e) {
       let key, newQty;
 
-      // If clicked Remove 'X'
       if (e.target.classList.contains('cart-item-remove')) {
+        e.preventDefault();
         key = e.target.getAttribute('data-key');
-        newQty = 0; // Sending 0 deletes the item
+        newQty = 0; 
       } 
-      // If clicked Plus or Minus
       else if (e.target.classList.contains('qty-btn')) {
         key = e.target.getAttribute('data-key');
         newQty = e.target.getAttribute('data-qty');
       }
 
-      // Update Shopify if a button was clicked
       if (key !== undefined && newQty !== undefined) {
-        cartBody.style.opacity = '0.5'; // Dim drawer while loading
+        cartBody.style.opacity = '0.5'; 
         cartBody.style.pointerEvents = 'none';
 
         fetch('/cart/change.js', {
@@ -239,11 +314,10 @@ document.addEventListener('DOMContentLoaded', function() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: key, quantity: newQty })
         })
-        .then(response => response.json())
-        .then(cart => {
+        .then(() => {
           cartBody.style.opacity = '1';
           cartBody.style.pointerEvents = 'auto';
-          updateCartDrawer(); // Rebuild the drawer instantly
+          updateCartDrawer(); 
         })
         .catch(error => console.error('Error updating cart:', error));
       }
@@ -261,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Close Drawer Event
   function closeCart() {
     if(cartDrawer) cartDrawer.classList.remove('active');
     if(cartOverlay) cartOverlay.classList.remove('active');
@@ -271,7 +344,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if(closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
   if(cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
-  // Make updateCartDrawer available globally so product pages can trigger it
   window.updateCartDrawer = updateCartDrawer;
 });
 
